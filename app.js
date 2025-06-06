@@ -1,6 +1,6 @@
 // Global Variables
+// kaka
 
-// Grab the restaraunt list section
 const restaurantList = document.getElementById("restaraunt-list");
 
 // Get Body
