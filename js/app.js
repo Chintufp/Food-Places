@@ -202,7 +202,7 @@ class Restaurants {
                   Opening Hours
                 </button>
 
-                <div class="opening-hours collapse">
+                <div class="opening-hours collapse show">
                   ${restaraunt.openingHours}
                 </div>
               </div>
