@@ -14,7 +14,7 @@ let allowSearch = true;
 nearbyBtn.addEventListener("click", onLoadFunc);
 
 function onLoadFunc() {
-  restaurantList.innerHTML = "<h2>Finding your location... Please wait.</h2>";
+  restaurantList.innerHTML = `<div style="display:inline" class="spinner-border" role="status"><span class="visually-hidden"></span></div><h2>Finding your location... Please wait</h2>`;
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(success, error, {
       enableHighAccuracy: true,
