@@ -1,0 +1,110 @@
+// Variables
+$lgreen: #4d9e4d;
+
+// For bg
+.bg-lgreen {
+    background-color: $lgreen !important;
+    border: none;
+}
+
+// General Styles
+.text-dark-warning {
+    color: gold;
+}
+
+.text-off-white {
+    color: whitesmoke !important
+}
+
+// For navbar
+.navbar {
+    border: none;
+}
+
+// For the wesbsite title
+.website-title {
+    color: #fff;
+    font-size: 2rem;
+}
+
+// To make the icons white
+.white-icon {
+    color: white;
+}
+
+// To Align the navbar icon to the right
+#magnifying-glass-div {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+
+// To align the search to the right
+.search {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: end;
+    // min-height: 7px;
+}
+
+// To shorten the search inputs width
+#area {
+    max-width: 190px;
+}
+
+
+// nearby restaraunts card
+#get-nearby-card {
+    background-color: $lgreen;
+    border: none;
+}
+
+// Restaurant List
+#restaurant-list {
+    margin-top: 5px;
+}
+
+// Restaurant Card
+
+.restaurant-card {
+    background-color: $lgreen;
+    border: none;
+    color: #1a1a1a;
+}
+
+h2 {
+    padding: 0;
+    margin: 0;
+}
+
+.heading-rating {
+    text-align: center;
+}
+
+.heading {
+    margin: none;
+    padding: none
+}
+
+// Restaraunt Info
+.restaurant-info {
+    min-width: 215px;
+}
+
+// Address Font size
+.address-fs {
+    font-size: 16px;
+}
+
+.addressLink:hover {
+    opacity: 0.7;
+}
+
+
+
+
+// Opening Hours
+.opening-hours {
+    text-align: left;
+}

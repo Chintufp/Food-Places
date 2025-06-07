@@ -1,7 +1,7 @@
 // Global Variables
 // kaka
 
-const restaurantList = document.getElementById("restaraunt-list");
+const restaurantList = document.getElementById("restaurant-list");
 
 // Get Body
 const body = document.querySelector("body");
@@ -159,58 +159,59 @@ class Restaurants {
   }
 
   static addRestaurants(restaraunt) {
-    // Create restaraunt-card section
-    const restarauntCard = document.createElement("div");
-    restarauntCard.style = "none";
-    restarauntCard.classList.add("restaraunt-card");
+    // Create the card
+    const restaurantCard = document.createElement("div");
+    restaurantCard.style = "none";
+    restaurantCard.classList = "card restaurant-card text-off-white";
 
-    // Create the heading-rating section and add it to the restaurant-card
-    const headingRating = document.createElement("div");
-    headingRating.classList.add("heading-rating");
-    restarauntCard.appendChild(headingRating);
+    // Create EVERTHING in the card
+    restaurantCard.innerHTML = `
+              <div class="card-body d-flex justify-content-between">
+            <!-- Left Side of card -->
+            <div class="heading-rating text-start">
+              <div class="heading"><h2>${restaraunt.name}</h2></div>
+              <div class="heading">
+                <h6><i class="fa-solid fa-star text-dark-warning"></i> ${restaraunt.rating}</h6>
+              </div>
+            </div>
 
-    // Create title
-    const restarauntTitle = document.createElement("div");
-    restarauntTitle.classList.add("heading");
-    headingRating.appendChild(restarauntTitle);
+            <!-- Right side of card -->
 
-    const h2 = document.createElement("h2");
-    h2.textContent = restaraunt.name;
-    restarauntTitle.appendChild(h2);
-    // Create the rating
-    const rating = document.createElement("div");
-    rating.classList.add("heading");
-    headingRating.appendChild(rating);
+            <!-- Address Section -->
+            <div class="restaurant-info">
+              <div id="address" class="d-flex justify-content-end gap-1 p-0">
+                <a
+                  class="addressLink p-0"
+                  href="${restaraunt.googleMapsUrl}"
+                  target="_blank"
+                  ><i
+                    class="text-dark fa-solid fa-location-dot address-fs"
+                    aria-hidden="true"
+                  ></i
+                ></a>
+                <div class="address p-0 address-fs">${restaraunt.address}</div>
+              </div>
 
-    const h4 = document.createElement("h4");
-    h4.textContent = restaraunt.rating;
-    rating.appendChild(h4);
+              <!-- Opening Hours Section -->
+              <div id="opening-hours-div" class="text-end">
+                <button
+                  id="opening-hours-btn"
+                  class="btn btn-sm btn-primary dropdown-toggle mt-2"
+                  onclick="toggleOpeningHours(this)"
+                >
+                  Opening Hours
+                </button>
 
-    // Create the restaraunt-info section
-    const restarauntInfo = document.createElement("div");
-    restarauntInfo.classList.add("restaraunt-info");
-    restarauntCard.appendChild(restarauntInfo);
-
-    // Create address label
-    const addressLabel = document.createElement("label");
-    addressLabel.textContent = "Address:";
-    restarauntInfo.appendChild(addressLabel);
-
-    // create address section
-    const address = document.createElement("div");
-    address.classList.add("address");
-    address.innerHTML = `${restaraunt.address} <a class="addressLink" href="${restaraunt.googleMapsUrl}" target="_blank"><i class="fa-solid fa-location-dot"></i></a>`;
-    restarauntInfo.appendChild(address);
-
-    // create opening hours section
-    const openingHours = document.createElement("div");
-    openingHours.classList.add("openinghours");
-    openingHours.innerHTML = restaraunt.openingHours;
-
-    restarauntInfo.appendChild(openingHours);
+                <div class="opening-hours collapse">
+                  ${restaraunt.openingHours}
+                </div>
+              </div>
+            </div>
+          </div>
+    `;
 
     // add restaraunt card to the restaraunt list
-    restaurantList.appendChild(restarauntCard);
+    restaurantList.appendChild(restaurantCard);
   }
 }
 

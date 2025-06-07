@@ -1,0 +1,24 @@
+{
+  "name": "food-places",
+  "version": "1.0.0",
+  "description": "A website that gets nearby restaraunts based on user's current location",
+  "main": "app.js",
+  "scripts": {
+    "sass:build": "sass --no-source-map scss:css",
+    "sass:watch": "sass --no-source-map --watch scss:css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chintufp/Food-Places.git"
+  },
+  "author": "Vaishnav Rane",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chintufp/Food-Places/issues"
+  },
+  "homepage": "https://github.com/Chintufp/Food-Places#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "sass": "^1.89.1"
+  }
+}
