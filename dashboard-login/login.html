@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="../public/css/bootstrap.css" />
+    <link rel="stylesheet" href="../public/css/login.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar bg-primary">
+      <div class="container">
+        <!-- Website Title -->
+        <h1 class="website-title">Food Places | Login</h1>
+
+        <!-- The Search Button in navbar -->
+        <div id="home">
+          <a href="../index.html" id="admin-home-btn" class="btn btn-primary"
+            ><i class="fa-solid fa-left-long"></i> Back</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div id="form-center-div">
+        <div class="card p-5 mt-5 darker-bg">
+          <div class="card-head text-center">
+            <h1>Login</h1>
+          </div>
+          <div class="card-body p-0">
+            <div>
+              <label for="name" class="form-label">Username</label>
+              <input type="name" class="form-control darker-border" />
+            </div>
+            <div>
+              <label for="name" class="form-label">Password</label>
+              <input type="name" class="form-control darker-border" />
+            </div>
+            <div class="center-btn">
+              <button id="login" class="btn btn-primary mt-1">
+                <i class="fa-solid fa-user-tie"></i>&nbsp Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="invalid-password-toast" class="toast-container">
+      <div class="card">
+        <div class="card-body rounded-3 text-bg-danger">
+          Invalid username or password
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/2c1c6fb3c6.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../public/js/bootstrap.bundle.min.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

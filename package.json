@@ -4,8 +4,8 @@
   "description": "A website that gets nearby restaraunts based on user's current location",
   "main": "app.js",
   "scripts": {
-    "sass:build": "sass --no-source-map scss:css",
-    "sass:watch": "sass --no-source-map --watch scss:css"
+    "sass:build": "sass --no-source-map scss:/public/css",
+    "sass:watch": "sass --no-source-map --watch scss:public/css"
   },
   "repository": {
     "type": "git",

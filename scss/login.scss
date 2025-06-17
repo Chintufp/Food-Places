@@ -1,0 +1,64 @@
+@import "../scss/bootstrap.scss";
+
+// Stylesheet for admin dashboard page
+.navbar {
+    border: none;
+    z-index: 2;
+}
+
+// For the wesbsite title
+.website-title {
+    color: #fff;
+    font-size: 2rem;
+}
+
+// To make the icons white
+.white-icon {
+    color: white;
+}
+
+// Styles for the home button
+#admin-home-btn {
+    color: #fff;
+}
+
+.height-full {
+    height: 100vh;
+}
+
+// center the form in the screen
+#form-center-div {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.darker-bg {
+    background-color: #eaffe4;
+}
+
+// Make the border darker
+.darker-border {
+    border-color: $secondary;
+}
+
+// Center the login button
+.center-btn {
+    display: flex;
+    flex-direction: column;
+}
+
+// Hide the incorrect password prompt
+#invalid-password-toast {
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    white-space: nowrap;
+    position: fixed;
+    right: 0;
+    bottom: 1%;
+}
+
+#invalid-password-toast.show {
+    opacity: 1;
+}
