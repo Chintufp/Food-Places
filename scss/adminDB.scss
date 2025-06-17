@@ -1,0 +1,44 @@
+// Stylesheet for admin dashboard page
+.navbar {
+    border: none;
+    z-index: 2;
+}
+
+// For the wesbsite title
+.website-title {
+    color: #fff;
+    font-size: 2rem;
+}
+
+// To make the icons white
+.white-icon {
+    color: white;
+}
+
+// Styles for the home button
+#admin-home-btn {
+    color: #fff;
+}
+
+// Styles for the add nfc tag div area 
+
+#add-NFC-div {
+    // Hide the form section
+    max-height: 0;
+    overflow: hidden;
+    position: relative;
+    opacity: 0;
+    top: -300px;
+    transition: all 0.5s ease;
+}
+
+#add-NFC-div.show {
+    // show the form section
+    overflow: hidden;
+    opacity: 1;
+    top: 0;
+}
+
+#add-nfc {
+    transition: all;
+}

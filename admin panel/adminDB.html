@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Places Admin</title>
+    <link rel="stylesheet" href="../css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/adminDB.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar bg-primary">
+      <div class="container">
+        <!-- Website Title -->
+        <h1 class="website-title">Food Places | Admin Dashboard</h1>
+
+        <!-- The Search Button in navbar -->
+        <div id="home">
+          <a href="../index.html" id="admin-home-btn" class="btn btn-primary"
+            ><i class="fa-solid fa-left-long"></i> Back</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Add NFC tag button -->
+      <button id="add-NFC" class="add-NFC btn btn-primary mt-2">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+      <!-- Form area for add NFC tag button -->
+      <div id="add-NFC-div" class="card mt-1">
+        <div class="card-body">
+          <button id="cancel-add" class="btn btn-danger mt-2">Cancel</button>
+          <button id="submit-add" class="btn btn-primary mt-2">Submit</button>
+
+          <div class="add-NFC-form d-flex flex-column flex-md-row gap-md-3">
+            <div class="mt-3 flex-fill">
+              <label for="name" class="form-label">Reseller Name</label>
+              <input type="name" class="form-control" />
+            </div>
+            <div class="mt-3 flex-fill">
+              <label for="name" class="form-label">Reseller Phone Number</label>
+              <input type="name" class="form-control" />
+            </div>
+            <div class="mt-3 flex-fill">
+              <label for="name" class="form-label">NFC Tag ID</label>
+              <input type="name" class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table displaying the current nfc tags -->
+      <table class="table table-hover mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Reseller</th>
+            <th>Reseller Phone</th>
+            <th>Link</th>
+            <th>NFC tag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>1</th>
+            <td>John Doe</td>
+            <td>0459098876</td>
+            <td>https://foodapp.com/restaraunt/1</td>
+            <td>Tag ID: 1</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>John Doe</td>
+            <td>0459098876</td>
+            <td>https://foodapp.com/restaraunt/2</td>
+            <td>Tag ID: 2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/2c1c6fb3c6.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="adminDB.js"></script>
+  </body>
+</html>
