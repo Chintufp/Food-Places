@@ -42,3 +42,28 @@
 #add-nfc {
     transition: all;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
+// Hide the confirm delete prompt
+#confirm-delete-toast {
+    transition: all 0.3s ease-in-out;
+    opacity: 0;
+    max-width: 0;
+    white-space: nowrap;
+    position: fixed;
+    right: 0;
+    bottom: 1%;
+}
+
+.alert {
+    background-color: #e29b02;
+    color: #f4f4f4;
+}
+
+#confirm-delete-toast.show {
+    opacity: 1;
+    max-width: 30rem;
+}

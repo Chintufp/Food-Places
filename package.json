@@ -4,7 +4,7 @@
   "description": "A website that gets nearby restaraunts based on user's current location",
   "main": "app.js",
   "scripts": {
-    "sass:build": "sass --no-source-map scss:/public/css",
+    "sass:build": "sass --no-source-map scss:public/css",
     "sass:watch": "sass --no-source-map --watch scss:public/css"
   },
   "repository": {
@@ -19,10 +19,10 @@
   "homepage": "https://github.com/Chintufp/Food-Places#readme",
   "dependencies": {
     "bootstrap": "^5.3.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mysql": "^2.18.1",
-    "nodemon": "^3.1.10",
     "sass": "^1.89.1"
   }
 }
