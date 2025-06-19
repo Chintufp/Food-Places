@@ -113,7 +113,7 @@ app.listen(process.env.PORT, () => {
 // Login page
 
 // Serve the public files in folder /public so that login page can access the css files
-app.use("/public", express.static(__dirname + "\\..\\public"));
+// app.use("/public", express.static(__dirname + "\\..\\public"));
 
 // To make working paths (because + doesn't work properly when using res.sendFile)
 const path = require("path");
