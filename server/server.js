@@ -6,9 +6,61 @@ dotenv.config({ path: "./server/.env" });
 
 const dbService = require("./dbService");
 
+const path = require("path");
+app.use(express.static(path.join(__dirname, "../public")));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Show the public files
+app.use(express.static(__dirname + "/../public"));
+
+// !!!!!!!!!!!!!!!!!
+// To use google apis
+// Geocode api
+app.post("/api/geocode", async (req, res) => {
+  const address = req.body.address;
+  // console.log(address);
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_API_KEY}`;
+
+  try {
+    const geoRes = await fetch(url);
+    const geoData = await geoRes.json();
+    return res.json(geoData);
+  } catch (error) {
+    if (error) {
+      console.log(error);
+    }
+  }
+});
+
+// Seearch Nearby api
+app.post("/api/search-nearby", async (req, res) => {
+  try {
+    const placesResponse = await fetch(
+      `https://places.googleapis.com/v1/places:searchNearby`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "X-Goog-Api-Key": process.env.GOOGLE_API_KEY,
+          "X-Goog-FieldMask": req.headers["x-goog-fieldmask"],
+        },
+        body: JSON.stringify(req.body),
+      }
+    );
+    const placesData = await placesResponse.json();
+    return res.json(placesData);
+  } catch (error) {
+    if (error) {
+      console.log(error);
+    }
+  }
+});
+// END OF GOOGLE API USE
+// !!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!
 
 // Create
 app.post("/insert", (request, response) => {

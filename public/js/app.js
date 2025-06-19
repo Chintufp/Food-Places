@@ -37,7 +37,6 @@ function success(position) {
     lng: position.coords.longitude,
   };
 
-  console.log(coords);
   // Call searchNearby After getting current coords
   let nearbyRestaurants;
   searchNearby(coords).then((res) => {
@@ -215,7 +214,7 @@ class Restaurants {
   }
 }
 
-// Event Listener for the button
+// Event Listener for the manual search button
 document.getElementById("submit").addEventListener("click", main);
 
 // Main Function
@@ -328,7 +327,6 @@ async function main() {
 }
 
 // Convert Given Location to coordinates
-const apiKey = "AIzaSyAEL29wvHNv_7oG5mSsOdGui6P2jCO2tb4";
 
 async function getCoords() {
   const input = document.getElementById("area");
@@ -340,9 +338,13 @@ async function getCoords() {
     urlAdd += word + "+";
   });
 
-  const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${urlAdd}&key=${apiKey}`
-  );
+  const res = await fetch(`/api/geocode`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ address: address }),
+  });
   let data = await res.json();
   data = await data.results[0];
   if (data) {
@@ -350,7 +352,6 @@ async function getCoords() {
 
     allowSearch = true;
     // Return Location Coordinates
-    console.log(locCoords);
     return locCoords;
   } else {
     restaurantList.innerHTML =
@@ -361,11 +362,6 @@ async function getCoords() {
 
 // Get nearby restaraunts
 async function searchNearby(coords) {
-  //   const foodTypesArr = ["restaurant", "Buffet"];
-  //   let foodTypes = "";
-  //   foodTypesArr.forEach((item) => {
-  //     foodTypes += item + ",";
-  //   });
   const coordinates = { latitude: coords.lat, longitude: coords.lng };
   const radius = 500;
 
@@ -375,19 +371,15 @@ async function searchNearby(coords) {
     locationRestriction: { circle: { center: coordinates, radius: radius } },
   };
 
-  const res = await fetch(
-    `https://places.googleapis.com/v1/places:searchNearby`,
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask":
-          "places.displayName,places.addressComponents,places.currentOpeningHours,places.rating,places.googleMapsUri",
-      },
-      body: JSON.stringify(requestBody),
-    }
-  );
+  const res = await fetch("/api/search-nearby", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "X-Goog-FieldMask":
+        "places.displayName,places.addressComponents,places.currentOpeningHours,places.rating,places.googleMapsUri",
+    },
+    body: JSON.stringify(requestBody),
+  });
 
   const data = await res.json();
   const restaraunts = await data;
