@@ -28,6 +28,10 @@ class DbService {
     }
   }
 
+  // !!!!!!!!!!!!!!!!!!!!!
+  // !!!!!!!!!!!!!!!!!!!!!
+  // Admin Page Queries!
+
   //   Get all Rows
   async getAllData() {
     try {
@@ -116,6 +120,29 @@ class DbService {
       return { success: true };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  // !!!!!!!!!!!!!!!!!
+  // !!!!!!!!!!!!!!!!!
+  // Login Page Queries!
+  async authenticateUser(username, password) {
+    try {
+      const user = new Promise((resolve, reject) => {
+        const query =
+          "SELECT * FROM `users` WHERE Username = ? AND Password = ?;";
+
+        connection.query(query, [username, password], (err, response) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(response);
+        });
+      });
+
+      return user;
+    } catch (error) {
+      console.log(error.message);
     }
   }
 }

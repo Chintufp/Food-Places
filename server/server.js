@@ -125,3 +125,29 @@ app.use(express.static(path.join(__dirname, "../dashboard-login")));
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../dashboard-login/login.html"));
 });
+
+// Check Password Query
+app.post("/auth/user", (request, response) => {
+  const db = dbService.getDbServiceInstance();
+
+  const username = request.body.username;
+  const password = request.body.password;
+
+  user = db.authenticateUser(username, password);
+  user.then((data) => {
+    if (data.length > 0) {
+      response.json({ success: true });
+    } else {
+      response.json({ success: false });
+    }
+  });
+});
+
+app.use(express.static(path.join(__dirname, "../admin-panel")));
+// app.use(express.static(path.join(__dirname, "../admin-panel")));
+// Redirect to admin DB
+app.get("/admin", (req, res) => {
+  console.log("redirect to admin");
+  res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
+  // res.redirect("adminDB.html");
+});
