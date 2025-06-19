@@ -116,10 +116,10 @@ app.listen(process.env.PORT, () => {
 // Login page
 
 // Serve the public files in folder /public so that login page can access the css files
-app.use(express.static("/public", path.join(__dirname, "../public")));
+app.use("/public", express.static(path.join(__dirname, "../public")));
 
 // Allow express to send all files from login folder as requested by browser
-app.use(express.static(__dirname + "\\..\\dashboard-login"));
+app.use(express.static(path.join(__dirname, "../dashboard-login")));
 
 // Login page code
 app.get("/login", (req, res) => {
