@@ -23,6 +23,7 @@ function onLoadFunc() {
     });
   } else {
     console.log("No Location");
+    restaurantList.innerHTML = `<div style="display:inline" class="spinner-border" role="status"><span class="visually-hidden"></span></div><h2>Location Not Found</h2>`;
   }
 }
 
@@ -374,7 +375,7 @@ async function searchNearby(coords) {
   const res = await fetch("/api/search-nearby", {
     method: "POST",
     headers: {
-      "content-type": "application/json",
+      "Content-Type": "application/json",
       "X-Goog-FieldMask":
         "places.displayName,places.addressComponents,places.currentOpeningHours,places.rating,places.googleMapsUri",
     },
