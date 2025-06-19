@@ -6,12 +6,15 @@ dotenv.config({ path: "./server/.env" });
 
 const dbService = require("./dbService");
 
+// To make working paths (because + doesn't work properly when using res.sendFile)
+const path = require("path");
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Show the public files
-app.use(express.static(__dirname + "\\..\\public"));
+app.use(express.static(path.join(__dirname, "../public")));
 
 // !!!!!!!!!!!!!!!!!
 // To use google apis
@@ -113,10 +116,8 @@ app.listen(process.env.PORT, () => {
 // Login page
 
 // Serve the public files in folder /public so that login page can access the css files
-// app.use("/public", express.static(__dirname + "\\..\\public"));
+app.use(express.static("/public", path.join(__dirname, "../public")));
 
-// To make working paths (because + doesn't work properly when using res.sendFile)
-const path = require("path");
 // Allow express to send all files from login folder as requested by browser
 app.use(express.static(__dirname + "\\..\\dashboard-login"));
 
