@@ -34,6 +34,7 @@ class DbService {
 
   //   Get all Rows
   async getAllData() {
+    console.log("GET NFC");
     try {
       const response = await new Promise((resolve, reject) => {
         const query = "SELECT * FROM nfc_tag_links;";
@@ -55,6 +56,7 @@ class DbService {
 
   //   Add new row
   async addNewNfc(reseller, phone, nfcId) {
+    console.log("Add NFC");
     try {
       const addRequest = await new Promise((resolve, reject) => {
         const query =

@@ -122,7 +122,7 @@ submitBtn.addEventListener("click", () => {
 
 // Add a new nfc tag to the database
 function addNewNFCTag(info) {
-  fetch("http://localhost:5000/insert", {
+  fetch("/insert", {
     headers: {
       "Content-type": "application/json",
     },
@@ -178,7 +178,7 @@ function deleteRow() {
   if (deleteConfirmed) {
     delete_info = { delete_id: tryDeleteRow.getAttribute("delete_id") };
 
-    fetch("http://localhost:5000/delete", {
+    fetch("delete", {
       headers: {
         "Content-type": "application/json",
       },
