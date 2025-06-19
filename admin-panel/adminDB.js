@@ -48,7 +48,7 @@ cancelBtn.addEventListener("click", () => {
 
 // Load everything when DOM loads
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("http://localhost:5000/get")
+  fetch("/get")
     .then((response) => {
       return response.json();
     })
