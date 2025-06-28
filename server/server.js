@@ -84,13 +84,17 @@ app.get("/get", (request, response) => {
   const db = dbService.getDbServiceInstance();
 
   const result = db.getAllData();
-  result
-    .then((data) => {
+  result.then((data) => {
+    if (data instanceof Error) {
+      console.log(data);
+      response.json({ error: "DBError", errorMessage: data.message });
+    } else {
       response.json({ data: data });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    }
+  });
+  // .catch((error) => {
+  //   console.log(error);
+  // });
 });
 
 // Update

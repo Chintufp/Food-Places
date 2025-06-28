@@ -4,6 +4,7 @@ const formCard = document.getElementById("add-NFC-div");
 const cancelBtn = document.getElementById("cancel-add");
 const submitBtn = document.getElementById("submit-add");
 const table = document.getElementById("nfc-table");
+const tableBody = document.getElementById("table-body");
 const confirmDeleteToast = document.getElementById("confirm-delete-toast");
 const confirmDeleteBtn = document.getElementById("confirm-delete");
 const cancelDeleteBtn = document.getElementById("cancel-delete");
@@ -53,7 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then((data) => {
-      loadData(data["data"]);
+      console.log(data);
+      if (data["error"] === "DBError") {
+        tableBody.innerHTML = "<h1>Database Error...</h1>";
+      } else {
+        loadData(data["data"]);
+      }
     });
 });
 
