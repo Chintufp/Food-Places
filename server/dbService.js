@@ -63,7 +63,7 @@ class DbService {
           "INSERT INTO nfc_tag_links (Reseller, Reseller_Phone,NFC_tag_id) VALUES(?,?,?);";
         connection.query(query, [reseller, phone, nfcId], (err, result) => {
           if (err) {
-            return reject(reject(new Error(err.message)));
+            return reject(new Error(err.message));
           }
 
           resolve(result);
