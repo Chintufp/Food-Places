@@ -54,9 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       if (data["error"] === "DBError") {
         tableBody.innerHTML = "<h1>Database Error...</h1>";
+      } else if (data["data"].length == 0) {
+        tableBody.innerHTML = "<h1>No Data</h1>";
       } else {
         loadData(data["data"]);
       }
@@ -73,6 +74,9 @@ function loadData(data) {
 
 // loads Row
 function loadRow(row) {
+  if (tableBody.innerHTML == "<h1>No Data</h1>") {
+    tableBody.innerHTML = "";
+  }
   const tableRow = document.createElement("tr");
 
   // The Inner HTML inside the table row
@@ -92,17 +96,13 @@ function loadRow(row) {
   table.appendChild(tableRow);
 }
 
-// Add New row to UI after adding to DB
-function addNewRow(data) {
-  console.log(data);
-}
-
 // Submit
 submitBtn.addEventListener("click", () => {
   if (
     reseller.value &&
     resellerPhone.value &&
-    Number.isInteger(parseInt(NFCTagId.value, 10))
+    Number.isInteger(parseInt(NFCTagId.value, 10)) &&
+    resellerPhone.value.length < 21
   ) {
     allowAdd = true;
   }
@@ -152,6 +152,14 @@ table.addEventListener("click", (e) => {
   confirmDeleteRow(e);
 });
 
+function confirmDeleteRow(e) {
+  if (e.target && e.target.parentElement.classList.contains("delete-row")) {
+    // Show the delete conformation section
+    confirmDeleteToast.classList.add("show");
+    tryDeleteRow = e.target.parentElement;
+  }
+}
+
 // Event listeners for the confirm delete and cancel delete buttons
 confirmDeleteBtn.addEventListener("click", () => {
   // allow the deletetion to happen
@@ -170,14 +178,6 @@ cancelDeleteBtn.addEventListener("click", () => {
 
   tryDeleteRow = "";
 });
-
-function confirmDeleteRow(e) {
-  if (e.target && e.target.parentElement.classList.contains("delete-row")) {
-    // Show the delete conformation section
-    confirmDeleteToast.classList.add("show");
-    tryDeleteRow = e.target.parentElement;
-  }
-}
 
 // Actually delete the row
 function deleteRow() {

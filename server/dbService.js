@@ -1,23 +1,24 @@
 const mysql = require("mysql2");
 const dotenv = require("dotenv");
-const { response } = require("express");
 let serviceInstance = null;
 dotenv.config({ path: "./server/.env" });
 
-const connection = mysql.createConnection({
+// Create a pool of connections (5 connections)
+
+const connection = mysql.createPool({
   host: process.env.HOST,
   user: process.env.DBUSERNAME,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
   port: process.env.DB_PORT,
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 0,
 });
-
-connection.connect((err) => {
-  if (err) {
-    console.log(err.message);
-  }
-  //   console.log("db " + connection.state);
-});
+// // Log the connectionos
+// console.log("All:", connection._allConnections.length);
+// console.log("Free:", connection._freeConnections.length);
+// console.log("Waiting:", connection._connectionQueue.length);
 
 class DbService {
   static getDbServiceInstance() {
@@ -132,7 +133,7 @@ class DbService {
     try {
       const user = new Promise((resolve, reject) => {
         const query =
-          "SELECT * FROM `users` WHERE Username = ? AND Password = ?;";
+          "SELECT * FROM `Users` WHERE Username = ? AND Password = ?;";
 
         connection.query(query, [username, password], (err, response) => {
           if (err) {
