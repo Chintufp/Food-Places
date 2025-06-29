@@ -25,7 +25,8 @@ loginBtn.addEventListener("click", () => {
     })
     .then((data) => {
       if (data.success) {
-        window.location.href = "/admin";
+        window.location.href = data.redirect;
+        console.log("Login Success");
       } else {
         wrongCreds();
       }

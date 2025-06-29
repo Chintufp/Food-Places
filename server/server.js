@@ -1,9 +1,19 @@
+// All the required modlues
+// Require Express
 const express = require("express");
-const app = express();
-const cors = require("cors");
-const dotenv = require("dotenv");
-dotenv.config({ path: "./server/.env" });
+const app = express(); // Create the express app
 
+// Require express-session
+const session = require("express-session");
+
+// Require cors to be able to communicate betweeen hosts
+const cors = require("cors");
+
+// Require dotenv
+const dotenv = require("dotenv");
+dotenv.config({ path: "./server/.env" }); // Configure dotenv to get the variables from the .env file
+
+// Import the functions from dbService
 const dbService = require("./dbService");
 
 // To make working paths (because + doesn't work properly when using res.sendFile)
@@ -12,6 +22,18 @@ const path = require("path");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    name: "foodPlaces.sid",
+    secret: process.env.SESSION_SECRECT_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  })
+);
 
 // Show the public files
 app.use(express.static(path.join(__dirname, "../public")));
@@ -110,11 +132,6 @@ app.post("/delete", (request, response) => {
   });
 });
 
-// Run the server locally
-app.listen(process.env.PORT, () => {
-  console.log(" Server Running");
-});
-
 // !!!!!!!!!!!!!!!!!!!!!!
 // !!!!!!!!!!!!!!!!!!!!!!
 // Login page
@@ -131,27 +148,64 @@ app.get("/login", (req, res) => {
 });
 
 // Check Password Query
-app.post("/auth/user", (request, response) => {
+app.post("/auth/user", (req, res) => {
   const db = dbService.getDbServiceInstance();
 
-  const username = request.body.username;
-  const password = request.body.password;
+  const username = req.body.username;
+  const password = req.body.password;
 
   user = db.authenticateUser(username, password);
   user.then((data) => {
     if (data.length > 0) {
-      response.json({ success: true });
+      // If user is successfully authenticated
+      req.session.regenerate((err) => {
+        if (err) {
+          return res
+            .status(500)
+            .send("Login Successful but something went wrong");
+        }
+
+        req.session.isAuthenticated = true;
+        req.session.username = req.body.username;
+        console.log("Cookie Generated");
+        // After Generating cookie send response
+        res.json({ success: true, redirect: "/admin" });
+      });
     } else {
-      response.json({ success: false });
+      // If something goes wrong
+      res.json({ success: false });
     }
   });
 });
 
-app.use(express.static(path.join(__dirname, "../admin-panel")));
-// app.use(express.static(path.join(__dirname, "../admin-panel")));
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Admin Page
+// Only send JS file if authenticated
+app.get("/adminDB.js", (req, res) => {
+  if (req.session.isAuthenticated) {
+    res.sendFile(path.join(__dirname, "../admin-panel/adminDB.js"));
+  }
+});
+
 // Redirect to admin DB
-app.get("/admin", (req, res) => {
-  console.log("redirect to admin");
-  res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
-  // res.redirect("adminDB.html");
+app.get("/admin", (req, res, next) => {
+  if (req.session.isAuthenticated) {
+    res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
+    console.log("redirect to admin");
+  } else {
+    next();
+  }
+});
+
+// Logout method - delete cookie and destroy session
+app.use("/logout", (req, res) => {
+  req.session.destroy();
+  res.clearCookie("foodPlaces.sid");
+  res.redirect("/");
+});
+
+// Run the server on given port
+app.listen(process.env.PORT, () => {
+  console.log(" Server Running");
 });

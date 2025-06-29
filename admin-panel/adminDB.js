@@ -203,3 +203,8 @@ function deleteRow() {
       });
   }
 }
+
+// // Logout Once DOM closes
+// window.addEventListener("beforeunload", () => {
+//   fetch("/logout");
+// });
