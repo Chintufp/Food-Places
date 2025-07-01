@@ -236,7 +236,6 @@ async function main() {
     // Add Each Restaurant to the UI
 
     nearbyRestaurants.forEach((restaurant) => {
-      console.log(restaurant);
       // Restaurants Name
       let name = "";
       if (restaurant.displayName.text) {
@@ -377,7 +376,7 @@ async function searchNearby(coords) {
     headers: {
       "Content-Type": "application/json",
       "X-Goog-FieldMask":
-        "places.displayName,places.addressComponents,places.currentOpeningHours,places.rating,places.googleMapsUri",
+        "places.displayName,places.addressComponents,places.currentOpeningHours,places.rating,places.googleMapsUri,places.id",
     },
     body: JSON.stringify(requestBody),
   });
@@ -386,6 +385,12 @@ async function searchNearby(coords) {
   const restaraunts = await data;
   // console.log(restaraunts["places"]);
   if (restaraunts["places"]) {
+    // Print the name and placeid of each restaurant
+    restaraunts["places"].forEach((restaurant) => {
+      console.log(
+        `Name: ${restaurant.displayName.text}, Place ID: ${restaurant.id}`
+      );
+    });
     return restaraunts["places"];
   } else {
     return "No Restaraunts Nearby";

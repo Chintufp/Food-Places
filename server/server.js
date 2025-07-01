@@ -19,6 +19,13 @@ const dbService = require("./dbService");
 // To make working paths (because + doesn't work properly when using res.sendFile)
 const path = require("path");
 
+// Set enviroment
+app.set("env", process.env.ENVIROMENT || "development");
+
+// Set the view engine to use ejs and set the folder where me ejs files are located
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "EJS"));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -89,10 +96,11 @@ app.post("/insert", (request, response) => {
   const name = request.body.reseller;
   const phoneNumber = request.body.phone;
   const nfcId = request.body.NfcId;
+  const placeId = request.body.placeID;
 
   const db = dbService.getDbServiceInstance();
 
-  const result = db.addNewNfc(name, phoneNumber, nfcId);
+  const result = db.addNewNfc(name, phoneNumber, nfcId, placeId);
 
   result
     .then((data) => {
@@ -120,6 +128,23 @@ app.get("/get", (request, response) => {
 });
 
 // Update
+app.post("/update", (request, response) => {
+  const db = dbService.getDbServiceInstance();
+  const updateNfcRes = db.updateNfc(
+    request.body.id,
+    request.body.resellerName,
+    request.body.resellerPhone,
+    request.body.nfcTagId,
+    request.body.placeId
+  );
+  updateNfcRes.then((data) => {
+    if (data.success) {
+      response.json({ success: true });
+    } else {
+      response.json({ success: false });
+    }
+  });
+});
 
 // Delete
 app.post("/delete", (request, response) => {
@@ -167,7 +192,6 @@ app.post("/auth/user", (req, res) => {
 
         req.session.isAuthenticated = true;
         req.session.username = req.body.username;
-        console.log("Cookie Generated");
         // After Generating cookie send response
         res.json({ success: true, redirect: "/admin" });
       });
@@ -192,7 +216,7 @@ app.get("/adminDB.js", (req, res) => {
 app.get("/admin", (req, res, next) => {
   if (req.session.isAuthenticated) {
     res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
-    console.log("redirect to admin");
+    // console.log("redirect to admin");
   } else {
     next();
   }
@@ -208,4 +232,21 @@ app.use("/logout", (req, res) => {
 // Run the server on given port
 app.listen(process.env.PORT, () => {
   console.log(" Server Running");
+});
+
+// Make the links work
+// Use route parameters to get the id part of the link, then send the id to the dbService and get the PlaceID
+app.get("/restaraunt/:id/", (req, res, next) => {
+  db = dbService.getDbServiceInstance();
+
+  // Get place id by link id
+  placeId = db.getPlaceIdByLinkId(req.params.id);
+
+  // Render the EJS page with the placeId
+  placeId.then((response) => {
+    console.log(response);
+    if (response !== null) {
+      res.render("restaraunt", { placeId: response });
+    } else next();
+  });
 });

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leave A Review</title>
+    <link rel="stylesheet" href="../public/css/bootstrap.css" />
+    <link rel="stylesheet" href="../public/css/restaraunt.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar bg-primary">
+      <div class="container">
+        <!-- Website Title -->
+        <h1 class="website-title">Review Page</h1>
+      </div>
+    </nav>
+
+    <!-- Body of the page -->
+    <div class="container">
+      <div class="center mt-3">
+        <a
+          target="_blank"
+          class="btn btn-primary p-3 <% if(placeId == undefined) {%>return unavailable disabled <%} %>"
+          href="https://search.google.com/local/writereview?placeid=<%= placeId %> "
+          >Leave a review</a
+        >
+      </div>
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/2c1c6fb3c6.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../public/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

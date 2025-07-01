@@ -58,3 +58,7 @@
   opacity: 1;
   max-width: 30rem;
 }
+
+.hover:hover {
+  opacity: 0.8;
+}

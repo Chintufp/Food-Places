@@ -35,7 +35,7 @@ class DbService {
 
   //   Get all Rows
   async getAllData() {
-    console.log("GET NFC");
+    // console.log("GET NFC");
     try {
       const response = await new Promise((resolve, reject) => {
         const query = "SELECT * FROM nfc_tag_links;";
@@ -56,19 +56,22 @@ class DbService {
   }
 
   //   Add new row
-  async addNewNfc(reseller, phone, nfcId) {
-    console.log("Add NFC");
+  async addNewNfc(reseller, phone, nfcId, placeId) {
     try {
       const addRequest = await new Promise((resolve, reject) => {
         const query =
-          "INSERT INTO nfc_tag_links (Reseller, Reseller_Phone,NFC_tag_id) VALUES(?,?,?);";
-        connection.query(query, [reseller, phone, nfcId], (err, result) => {
-          if (err) {
-            return reject(new Error(err.message));
-          }
+          "INSERT INTO nfc_tag_links (Reseller, Reseller_Phone,NFC_tag_id, Place_ID) VALUES(?,?,?,?);";
+        connection.query(
+          query,
+          [reseller, phone, nfcId, placeId],
+          (err, result) => {
+            if (err) {
+              return reject(new Error(err.message));
+            }
 
-          resolve(result);
-        });
+            resolve(result);
+          }
+        );
       });
 
       //   Using the Row's id, Update the empty link section of the row, with a new unique link
@@ -76,7 +79,7 @@ class DbService {
       const linkId = addRequest.insertId;
 
       //   New Unique Link
-      const link = `https://foodapp.com/restaurant/${linkId}`;
+      const link = `${process.env.URL}/restaraunt/${linkId}`;
 
       await new Promise((resolve, reject) => {
         const updateAddRequestQuery =
@@ -99,7 +102,33 @@ class DbService {
         Reseller_Phone: phone,
         NFC_tag_id: nfcId,
         Link: link,
+        Place_ID: placeId,
       };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //  Update Row
+  async updateNfc(id, reseller, phone, nfcId, placeId) {
+    try {
+      const updateRequest = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE nfc_tag_links SET Reseller = ?, Reseller_Phone = ?, NFC_tag_id = ?, Place_ID = ? WHERE ID = ?";
+        connection.query(
+          query,
+          [reseller, phone, nfcId, placeId, id],
+          (err, result) => {
+            if (err) {
+              return reject(err.message);
+            }
+            resolve(result);
+          }
+        );
+      });
+
+      console.log(updateRequest);
+      return { success: true, id, reseller, phone, nfcId, placeId };
     } catch (error) {
       console.log(error);
     }
@@ -108,7 +137,7 @@ class DbService {
   //   Delete Row
   async deleteNfc(id) {
     try {
-      const deleteAttempt = await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         const query = "DELETE FROM nfc_tag_links WHERE ID = ?";
 
         //   send query to database
@@ -133,7 +162,7 @@ class DbService {
     try {
       const user = new Promise((resolve, reject) => {
         const query =
-          "SELECT * FROM `Users` WHERE Username = ? AND Password = ?;";
+          "SELECT * FROM `users` WHERE Username = ? AND Password = ?;";
 
         connection.query(query, [username, password], (err, response) => {
           if (err) {
@@ -144,6 +173,39 @@ class DbService {
       });
 
       return user;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  // !!!!!!!!!!!!!!!!!
+  // !!!!!!!!!!!!!!!!!
+  // Review Page Queries!
+  async getPlaceIdByLinkId(linkId) {
+    try {
+      const placeId = await new Promise((resolve, reject) => {
+        // Query to the databse to get the plave Id where nfc id matches
+        const query = "SELECT Place_ID FROM nfc_tag_links WHERE ID = ?;";
+        connection.query(query, [linkId], (err, response) => {
+          if (err) {
+            return reject(new Error(err.message));
+          }
+
+          // If the response is not empty and place Id is not blank then resolve with the place ID
+
+          if (response.length > 0) {
+            if (response[0].Place_ID != "") {
+              resolve(response[0].Place_ID);
+            } else {
+              resolve(undefined);
+            }
+          } else {
+            resolve(null);
+          }
+        });
+      });
+
+      return placeId;
     } catch (error) {
       console.log(error.message);
     }
