@@ -11,7 +11,7 @@ const cors = require("cors");
 
 // Require dotenv
 const dotenv = require("dotenv");
-dotenv.config({ path: "./server/.env" }); // Configure dotenv to get the variables from the .env file
+dotenv.config({ path: ".env" }); // Configure dotenv to get the variables from the .env file
 
 // Import the functions from dbService
 const dbService = require("./dbService");
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     name: "foodPlaces.sid",
-    secret: process.env.SESSION_SECRECT_KEY,
+    secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -236,7 +236,7 @@ app.listen(process.env.PORT, () => {
 
 // Make the links work
 // Use route parameters to get the id part of the link, then send the id to the dbService and get the PlaceID
-app.get("/restaraunt/:id/", (req, res, next) => {
+app.get("/restaurant/:id/", (req, res, next) => {
   db = dbService.getDbServiceInstance();
 
   // Get place id by link id
@@ -246,7 +246,7 @@ app.get("/restaraunt/:id/", (req, res, next) => {
   placeId.then((response) => {
     console.log(response);
     if (response !== null) {
-      res.render("restaraunt", { placeId: response });
+      res.render("restaurant", { placeId: response });
     } else next();
   });
 });

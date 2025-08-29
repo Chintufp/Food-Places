@@ -17,6 +17,11 @@ const resellerPhone = document.getElementById("phone-number");
 const NFCTagId = document.getElementById("nfc-tag-id");
 const placeID = document.getElementById("placeID");
 
+// Socials Elements
+const addSocialBtn = document.getElementById("add-social");
+const removeSocialBtn = document.getElementById("remove-social");
+const socialsDiv = document.getElementById("extra-socials");
+
 // Booleans
 let allowAdd = false;
 let deleteConfirmed = false;
@@ -28,7 +33,6 @@ addBtn.addEventListener("click", () => {
 
   //   Show the form area
   formCard.classList.add("show");
-  formCard.style.maxHeight = formCard.scrollHeight + "px";
 });
 
 // Hide the from area when the cancel button is clicked
@@ -39,9 +43,13 @@ cancelBtn.addEventListener("click", () => {
   NFCTagId.value = "";
   // Hide the from area
   formCard.classList.remove("show");
-  formCard.style.maxHeight = "0px";
   // Show the plus button
   addBtn.style.display = "block";
+
+  // Clear all the extra socials
+  socialsDiv.innerHTML = "";
+  removeSocialBtn.style.display = "none";
+  extraSocials = 0;
 });
 
 // Create a global variable to store the orignal info of the row to be edited
@@ -113,6 +121,55 @@ function cancelEdit(e) {
             </td>
   `;
 }
+
+// Socials Stuff
+
+// Adding Extra/Custom socials
+let extraSocials = 0;
+
+// Event listener for add social button
+addSocialBtn.addEventListener("click", () => {
+  if (extraSocials == 0) {
+    removeSocialBtn.style.display = "inline-block";
+  }
+  extraSocials += 1;
+
+  const newSocialForm = document.createElement("div");
+  newSocialForm.classList.add("mt-3", "custom-social", "col-12", "col-md-3");
+  newSocialForm.innerHTML = `
+                <div class="form-floating">
+                <input
+                  id="extra-social-${extraSocials}-name"
+                  type="text"
+                  class="form-control"
+                  id="platform"
+                  placeholder="Platform Name"
+                />
+                <label for="extra-social-${extraSocials}-name">Platform Name</label>
+              </div>
+              <div class="form-floating">
+                <input id="extra-social-${extraSocials}-link" type="text" class="form-control" placeholder=" " />
+                <label for="extra-social-${extraSocials}-link" class="form-label social-label">Link</label>
+              </div>
+  `;
+
+  socialsDiv.appendChild(newSocialForm);
+});
+
+// Remove the last social form
+removeSocialBtn.addEventListener("click", () => {
+  let lastSocial = document.getElementById(`extra-social-${extraSocials}-name`)
+    .parentElement.parentElement;
+
+  lastSocial.remove();
+
+  extraSocials -= 1;
+
+  // If there are no extra socials then hide the remove button
+  if (extraSocials == 0) {
+    removeSocialBtn.style.display = "none";
+  }
+});
 
 // NON UI STUFF
 // !!!!!!!!!!!!!!!
@@ -193,7 +250,6 @@ submitBtn.addEventListener("click", () => {
     placeID.value = "";
     // Hide the from area
     formCard.classList.remove("show");
-    formCard.style.maxHeight = "0px";
     // Show the plus button
     addBtn.style.display = "block";
   }

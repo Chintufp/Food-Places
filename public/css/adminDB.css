@@ -26,17 +26,48 @@
 }
 
 #add-NFC-div.show {
-  overflow: hidden;
+  overflow: visible;
   opacity: 1;
   top: 0;
+  max-height: fit-content;
 }
 
 #add-nfc {
   transition: all;
 }
 
+.asterisk {
+  font-size: 10px;
+}
+
 .pointer {
   cursor: pointer;
+}
+
+.social-label {
+  margin-left: 5px;
+}
+
+#remove-social {
+  display: none;
+  height: 22px;
+  width: 22px;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 0;
+  align-self: flex-end;
+}
+
+#add-social {
+  display: inline-block;
+  height: 22px;
+  width: 22px;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 0;
+  align-self: flex-end;
 }
 
 #confirm-delete-toast {

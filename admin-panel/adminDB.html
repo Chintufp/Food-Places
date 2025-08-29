@@ -28,7 +28,7 @@
       <button id="add-NFC" class="add-NFC btn btn-primary mt-2">
         <i class="fa-solid fa-plus"></i>
       </button>
-      <!-- Form area for add NFC tag button -->
+      <!-- Form area for add NFC tag Reseller button -->
       <div id="add-NFC-div" class="card mt-1">
         <div class="card-body">
           <button id="cancel-add" class="btn btn-danger mt-2">Cancel</button>
@@ -36,24 +36,159 @@
 
           <div class="add-NFC-form d-flex flex-column flex-md-row gap-md-3">
             <div class="mt-3 flex-fill">
-              <label for="input-name" class="form-label">Reseller Name</label>
-              <input id="input-name" type="text" class="form-control" />
+              <div class="form-floating">
+                <input
+                  id="input-name"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+
+                <label for="input-name" class="form-label"
+                  >Reseller Name
+                  <i class="fa-solid fa-asterisk text-danger asterisk"></i
+                ></label>
+              </div>
+            </div>
+
+            <div class="mt-3 flex-fill">
+              <div class="form-floating">
+                <input
+                  id="phone-number"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+
+                <label for="phone-number" class="form-label"
+                  >Reseller Phone
+                  <i class="fa-solid fa-asterisk text-danger asterisk"></i
+                ></label>
+              </div>
+            </div>
+
+            <div class="mt-3 flex-fill">
+              <div class="form-floating">
+                <input
+                  id="nfc-tag-id"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+
+                <label for="nfc-tag-id" class="form-label"
+                  >NFC Tag ID
+                  <i class="fa-solid fa-asterisk text-danger asterisk"></i
+                ></label>
+              </div>
             </div>
             <div class="mt-3 flex-fill">
-              <label for="phone-number" class="form-label p-0"
-                >Reseller Phone Number</label
-              >
-              <input id="phone-number" type="text" class="form-control" />
-            </div>
-            <div class="mt-3 flex-fill">
-              <label for="nfc-tag-id" class="form-label">NFC Tag ID</label>
-              <input id="nfc-tag-id" type="text" class="form-control" />
-            </div>
-            <div class="mt-3 flex-fill">
-              <label for="placeID" class="form-label">Place ID</label>
-              <input id="placeID" type="text" class="form-control" />
+              <div class="form-floating">
+                <input
+                  id="placeID"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+
+                <label for="placeID" class="form-label"
+                  >Place ID
+                  <i class="fa-solid fa-asterisk text-danger asterisk"></i
+                ></label>
+              </div>
             </div>
           </div>
+
+          <!-- Socials Input -->
+          <div
+            id="socials-section"
+            class="d-flex flex-column flex-md-row gap-md-3"
+          >
+            <div class="mt-3 flex-fill social">
+              <div class="form-floating">
+                <input
+                  id="facebook"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+                <label for="facebook" class="form-label social-label"
+                  ><i class="fa-brands fa-square-facebook"></i>
+                  Facebook
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-3 flex-fill social">
+              <div class="form-floating">
+                <input
+                  id="instagram"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+                <label for="instagram" class="form-label social-label"
+                  ><i class="fa-brands fa-square-instagram"></i>
+                  Instagram</label
+                >
+              </div>
+            </div>
+
+            <div class="mt-3 flex-fill social">
+              <div class="form-floating">
+                <input
+                  id="youtube"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+                <label for="youtube" class="form-label social-label"
+                  ><i class="fa-brands fa-youtube text-danger"></i> YouTube
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-3 flex-fill social">
+              <div class="form-floating">
+                <input
+                  id="tiktok"
+                  type="text"
+                  class="form-control"
+                  placeholder=" "
+                />
+
+                <label for="tiktok" class="form-label social-label"
+                  ><i class="fa-brands fa-tiktok"></i> Tiktok</label
+                >
+              </div>
+            </div>
+          </div>
+          <div id="extra-socials" class="row">
+            <!-- All the user added socials will be here -->
+            <!-- <div class="mt-3 custom-social col-12 col-md-3">
+              <div class="form-floating">
+                <input
+                  id=""
+                  type="text"
+                  class="form-control"
+                  id="platform"
+                  placeholder="Platform Name"
+                />
+                <label for="platform1">Platform Name</label>
+              </div>
+              <div class="form-floating">
+                <input id="" type="text" class="form-control" placeholder=" " />
+                <label for="" class="form-label social-label">Link</label>
+              </div>
+            </div> -->
+          </div>
+          <!-- Button to add more socials -->
+          <button id="remove-social" class="btn btn-danger">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <button id="add-social" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i>
+          </button>
         </div>
       </div>
 
