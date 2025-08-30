@@ -109,6 +109,14 @@ app.post("/insert", (request, response) => {
     .catch((error) => console.log(error));
 });
 
+// Add socials
+app.post("/insert-socials", (req, res) => {
+  const socials = req.body;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.addSocials(socials.placeId, socials.socials);
+});
+
 // Read
 app.get("/get", (request, response) => {
   const db = dbService.getDbServiceInstance();
@@ -144,6 +152,15 @@ app.post("/update", (request, response) => {
       response.json({ success: false });
     }
   });
+});
+
+// Update socials placeid
+app.post("/update-socials-placeid", (req, res) => {
+  const db = dbService.getDbServiceInstance();
+
+  const newPlaceId = req.body.newPlaceId;
+  const oldPlaceId = req.body.oldPlaceId;
+  db.updateSocialsPlaceId(oldPlaceId, newPlaceId);
 });
 
 // Delete
@@ -209,6 +226,9 @@ app.post("/auth/user", (req, res) => {
 app.get("/adminDB.js", (req, res) => {
   if (req.session.isAuthenticated) {
     res.sendFile(path.join(__dirname, "../admin-panel/adminDB.js"));
+  } else {
+    // temorarily allow access to admin page without login
+    res.sendFile(path.join(__dirname, "../admin-panel/adminDB.js"));
   }
 });
 
@@ -218,7 +238,9 @@ app.get("/admin", (req, res, next) => {
     res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
     // console.log("redirect to admin");
   } else {
-    next();
+    // Temporarily allow access to admin page without login
+    res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
+    // next();
   }
 });
 

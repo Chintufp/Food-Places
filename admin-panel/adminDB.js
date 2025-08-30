@@ -22,6 +22,12 @@ const addSocialBtn = document.getElementById("add-social");
 const removeSocialBtn = document.getElementById("remove-social");
 const socialsDiv = document.getElementById("extra-socials");
 
+// Edit Panel Elements
+const editPanelBg = document.getElementById("edit-panel-background");
+const editPanel = document.getElementById("edit-panel");
+const editPanelCancelBtn = document.getElementById("edit-panel-cancel");
+const editPanelConfirmBtn = document.getElementById("edit-panel-confirm");
+
 // Booleans
 let allowAdd = false;
 let deleteConfirmed = false;
@@ -101,6 +107,7 @@ function cancelEdit(e) {
   rowsBeingEditedInfo.forEach((row, i) => {
     if (row.id == selectedRowId) {
       orignalRowInfo = row;
+      rowsBeingEditedInfo.splice(i, 1); // Remove the row from the array
     }
   });
   const rowToRevert = e.target.parentElement.parentElement.parentElement;
@@ -112,6 +119,8 @@ function cancelEdit(e) {
             <td class="p-2">Tag ID: ${orignalRowInfo.nfcTagId}</td>
             <td class="p-2"> ${orignalRowInfo.placeId}</td>
             <td>
+          <a info_id="${orignalRowInfo.id}" class="text-secondary pointer info-row p-0">
+          <i class="fa-solid fa-circle-info"></i></a>
               <a edit_id="${orignalRowInfo.id}" class="text-primary pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
               ></a>
@@ -122,7 +131,7 @@ function cancelEdit(e) {
   `;
 }
 
-// Socials Stuff
+// Socials UI Stuff
 
 // Adding Extra/Custom socials
 let extraSocials = 0;
@@ -171,6 +180,157 @@ removeSocialBtn.addEventListener("click", () => {
   }
 });
 
+// Edit Panel Stuff
+
+// Bring up the edit panel when the edit button is clicked
+function showEditPanel(e) {
+  editPanelOrignalInfo = {};
+  // Show the edit panel
+  editPanelBg.style = "opacity:1; z-index: 10;";
+  editPanel.classList.add("show");
+
+  // Get the orignal info of the row
+
+  const row = e.target.parentElement.parentElement.parentElement;
+  editPanelOrignalInfo = {
+    id: row.querySelector("th:nth-child(1)").innerText,
+    resellerName: row.querySelector("td:nth-child(2)").innerText,
+    resellerPhone: row.querySelector("td:nth-child(3)").innerText,
+    link: row.querySelector("td:nth-child(4)").innerText,
+    nfcTagId: row
+      .querySelector("td:nth-child(5)")
+      .innerText.replace("Tag ID: ", ""),
+    placeId: row.querySelector("td:nth-child(6)").innerText,
+  };
+
+  // Fill in the edit panel with the orignal info
+  document.getElementById("edit-panel-id").querySelector("input").value =
+    editPanelOrignalInfo.id;
+  document.getElementById("edit-panel-name").querySelector("input").value =
+    editPanelOrignalInfo.resellerName;
+  document.getElementById("edit-panel-phone").querySelector("input").value =
+    editPanelOrignalInfo.resellerPhone;
+  document.getElementById("edit-panel-link").querySelector("input").value =
+    editPanelOrignalInfo.link;
+  document.getElementById("edit-panel-placeId").querySelector("input").value =
+    editPanelOrignalInfo.placeId;
+  document.getElementById("edit-panel-tagId").querySelector("input").value =
+    editPanelOrignalInfo.nfcTagId;
+}
+
+// Event listener for the edit panel cancel button
+editPanelCancelBtn.addEventListener("click", () => {
+  // Clear all the input's values in the edit panel
+  const editPanelInputs = Array.from(
+    document.getElementById("edit-panel-inputs").children
+  );
+
+  // Loop through all the input's and clear their values
+  editPanelInputs.forEach((input) => {
+    input.querySelector("input").value = "";
+  });
+
+  // Hide the edit panel
+  editPanelBg.style = "opacity:0; z-index: -10;";
+  editPanel.classList.remove("show");
+});
+
+// Event listener for the edit panel confirm button
+editPanelConfirmBtn.addEventListener("click", (e) => {
+  const editPanelInputs = e.target.parentElement.parentElement.parentElement
+    .querySelector(".card-body")
+    .querySelector("#edit-panel-inputs");
+
+  // Get the new inputs values
+  const editId = editPanelInputs.children[0].querySelector("input").value;
+  const resellerName = editPanelInputs.children[1].querySelector("input").value;
+  const resellerPhone =
+    editPanelInputs.children[2].querySelector("input").value;
+  let nfcTagId = editPanelInputs.children[4].querySelector("input").value;
+  nfcTagId = nfcTagId.replace("Tag ID: ", ""); // Remove "Tag ID: " from the string
+  const placeId = editPanelInputs.children[5].querySelector("input").value;
+
+  // Create an object with the new values
+  const editedRowInfo = {
+    id: editId,
+    resellerName: resellerName,
+    resellerPhone: resellerPhone,
+    nfcTagId: nfcTagId,
+    placeId: placeId,
+  };
+
+  if (
+    editedRowInfo.resellerName !== editPanelOrignalInfo.resellerName ||
+    editedRowInfo.resellerPhone !== editPanelOrignalInfo.resellerPhone ||
+    editedRowInfo.nfcTagId !== editPanelOrignalInfo.nfcTagId ||
+    editedRowInfo.placeId !== editPanelOrignalInfo.placeId
+  ) {
+    // Send the edited row info to the server
+    fetch("/update", {
+      headers: { "Content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify(editedRowInfo),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          console.log("Edit Success");
+        }
+      });
+
+    // If placeId was changed then also update the placeId in the socials table
+    if (editedRowInfo.placeId !== editPanelOrignalInfo.placeId) {
+      placeIDs = {
+        oldPlaceId: editPanelOrignalInfo.placeId,
+        newPlaceId: editedRowInfo.placeId,
+      };
+      fetch("/update-socials-placeid", {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(placeIDs),
+      });
+    }
+  }
+
+  // Update the row in the table with the new values
+  const rowToUpdate = table.querySelector(`[info_id="${editedRowInfo.id}"]`)
+    .parentElement.parentElement;
+  rowToUpdate.innerHTML = `
+            <th class="p-2">${editedRowInfo.id}</th>
+            <td class="p-2">${editedRowInfo.resellerName}</td>
+            <td class="p-2">${editedRowInfo.resellerPhone}</td>
+            <td class="p-2">https://foodapp.com/restaraunt/${editedRowInfo.id}</td>
+            <td class="p-2">Tag ID: ${editedRowInfo.nfcTagId}</td>
+            <td class="p-2"> ${editedRowInfo.placeId}</td>
+            <td>
+            <a info_id="${editedRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <i class="fa-solid fa-circle-info"></i></a>
+              <a edit_id="${editedRowInfo.id}" class="text-primary pointer edit-row hover p-0"
+                ><i class="hover fa-solid fa-pen-to-square"></i
+              ></a>
+              <a delete_id="${editedRowInfo.id}" class="text-danger pointer delete-row hover p-0"
+                ><i class="hover fa-solid fa-circle-xmark"></i
+              ></a>
+            </td>
+  `;
+
+  // Clear all the input's values in the edit panel
+  const panelInputs = Array.from(
+    document.getElementById("edit-panel-inputs").children
+  );
+
+  // Loop through all the input's and clear their values
+  panelInputs.forEach((input) => {
+    input.querySelector("input").value = "";
+  });
+
+  // Hide the edit panel
+  editPanelBg.style = "opacity:0; z-index: -10;";
+  editPanel.classList.remove("show");
+});
+
 // NON UI STUFF
 // !!!!!!!!!!!!!!!
 // !!!!!!!!!!!!!!
@@ -216,6 +376,8 @@ function loadRow(row) {
   <td class="p-2">Tag ID: ${row.NFC_tag_id}</td>
   <td class="p-2">${row.Place_ID}</td>
   <td>
+    <a info_id="${row.ID}" class="text-secondary pointer info-row p-0">
+    <i class="fa-solid fa-circle-info"></i></a>
     <a edit_id="${row.ID}" class="text-primary pointer edit-row p-0"><i class="hover fa-solid fa-pen-to-square"></i></a>
     <a delete_id="${row.ID}" class="text-danger pointer delete-row p-0"><i class="hover fa-solid fa-circle-xmark"></i></a>
   </td>
@@ -230,10 +392,12 @@ submitBtn.addEventListener("click", () => {
     reseller.value &&
     resellerPhone.value &&
     Number.isInteger(parseInt(NFCTagId.value, 10)) &&
-    resellerPhone.value.length < 21
+    resellerPhone.value.length < 21 &&
+    placeID.value != ""
   ) {
     allowAdd = true;
   }
+  // If all the values are valid then add the new nfc tag to the database
   if (allowAdd) {
     info = {
       reseller: reseller.value,
@@ -242,6 +406,58 @@ submitBtn.addEventListener("click", () => {
       placeID: placeID.value,
     };
     addNewNFCTag(info);
+
+    // Add socials links to socials table in database
+    const facebookInput = document.getElementById("facebook");
+    const instagramInput = document.getElementById("instagram");
+    const youtubeInput = document.getElementById("youtube");
+    const tiktokInput = document.getElementById("tiktok");
+
+    // Create a socials object to store all the socials
+    let socialsRequest = {};
+    let socials = {
+      facebook: facebookInput.value,
+      instagram: instagramInput.value,
+      youtube: youtubeInput.value,
+      tiktok: tiktokInput.value,
+    };
+
+    // Clear the empty values from the socials object
+    for (let key in socials) {
+      if (!socials[key]) {
+        delete socials[key];
+      }
+    }
+
+    // Loop through all the extra socials and add them to the socials object
+    if (extraSocials > 0) {
+      for (let i = 1; i <= extraSocials; i++) {
+        const extraSocialName = document.getElementById(
+          `extra-social-${i}-name`
+        );
+        const extraSocialLink = document.getElementById(
+          `extra-social-${i}-link`
+        );
+        // Only add the social if both the name and link are provided
+        if (extraSocialName.value && extraSocialLink.value) {
+          socials[extraSocialName.value] = extraSocialLink.value;
+        }
+      }
+    }
+
+    // Add the socials to the database
+    // Assign placeId to the socials object
+    socialsRequest.placeId = placeID.value;
+    socialsRequest.socials = socials;
+
+    // If the length of the socials object is more than 1 then there are socials to add
+    if (Object.keys(socials).length > 1) {
+      fetch("/insert-socials", {
+        headers: { "Content-type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(socialsRequest),
+      });
+    }
 
     // Clear the values from the form area
     reseller.value = "";
@@ -294,6 +510,10 @@ table.addEventListener("click", (e) => {
   // If the button pressed is the confirm edit button then save the changes
   else if (e.target.parentElement.classList.contains("confirm-edit")) {
     editConfirmed(e);
+  }
+  // If the button pressed is the info button then show the info panel
+  else if (e.target.parentElement.classList.contains("info-row")) {
+    showEditPanel(e);
   }
 });
 
@@ -375,20 +595,34 @@ function editConfirmed(e) {
     placeId: placeId,
   };
 
-  // Send the edited row info to the server
-  fetch("/update", {
-    headers: { "Content-type": "application/json" },
-    method: "POST",
-    body: JSON.stringify(editedRowInfo),
-  })
-    .then((response) => {
-      return response.json();
+  rowsBeingEditedInfo.forEach((row, i) => {
+    if (row.id == editId) {
+      orignalRowInfo = row;
+      rowsBeingEditedInfo.splice(i, 1); // Remove the row from the array
+    }
+  });
+
+  // Check to see if any changes were made
+  if (
+    editedRowInfo.resellerName !== orignalRowInfo.resellerName ||
+    editedRowInfo.resellerPhone !== orignalRowInfo.resellerPhone ||
+    editedRowInfo.nfcTagId !== orignalRowInfo.nfcTagId ||
+    editedRowInfo.placeId !== orignalRowInfo.placeId
+  ) {
+    // Send the edited row info to the server
+    fetch("/update", {
+      headers: { "Content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify(editedRowInfo),
     })
-    .then((data) => {
-      if (data.success) {
-        console.log("success");
-        // Update the row with the edited values
-        rowToEdit.innerHTML = `
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          console.log("success");
+          // Update the row with the edited values
+          rowToEdit.innerHTML = `
             <th class="p-2">${editedRowInfo.id}</th>
             <td class="p-2">${editedRowInfo.resellerName}</td>
             <td class="p-2">${editedRowInfo.resellerPhone}</td>
@@ -396,6 +630,8 @@ function editConfirmed(e) {
             <td class="p-2">Tag ID: ${editedRowInfo.nfcTagId}</td>
             <td class="p-2"> ${editedRowInfo.placeId}</td>
             <td>
+            <a info_id="${editedRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <i class="fa-solid fa-circle-info"></i></a>
               <a edit_id="${editedRowInfo.id}" class="text-primary pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
               ></a>
@@ -404,8 +640,42 @@ function editConfirmed(e) {
               ></a>
             </td>
   `;
-      }
-    });
+        }
+      });
+
+    // If placeId was changed then also update the placeId in the socials table
+    if (editedRowInfo.placeId !== orignalRowInfo.placeId) {
+      placeIDs = {
+        oldPlaceId: orignalRowInfo.placeId,
+        newPlaceId: editedRowInfo.placeId,
+      };
+      fetch("/update-socials-placeid", {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        body: JSON.stringify(placeIDs),
+      });
+    }
+  } else {
+    // If no changes were made then revert the row back to normal
+    rowToEdit.innerHTML = `
+            <th class="p-2">${orignalRowInfo.id}</th>
+            <td class="p-2">${orignalRowInfo.resellerName}</td>
+            <td class="p-2">${orignalRowInfo.resellerPhone}</td>
+            <td class="p-2">https://foodapp.com/restaraunt/${orignalRowInfo.id}</td>
+            <td class="p-2">Tag ID: ${orignalRowInfo.nfcTagId}</td>
+            <td class="p-2"> ${orignalRowInfo.placeId}</td>
+            <td>
+            <a info_id="${orignalRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <i class="fa-solid fa-circle-info"></i></a>
+              <a edit_id="${orignalRowInfo.id}" class="text-primary pointer edit-row hover p-0"
+                ><i class="hover fa-solid fa-pen-to-square"></i
+              ></a>
+              <a delete_id="${orignalRowInfo.id}" class="text-danger pointer delete-row hover p-0"
+                ><i class="hover fa-solid fa-circle-xmark"></i
+              ></a>
+            </td>
+  `;
+  }
 }
 
 // // Logout Once DOM closes

@@ -109,6 +109,31 @@ class DbService {
     }
   }
 
+  // Add socials to socials table
+  async addSocials(placeId, socials) {
+    try {
+      const addSocialsRequest = await new Promise((resolve, reject) => {
+        for (let [key, value] of Object.entries(socials)) {
+          const query =
+            "INSERT INTO socials (place_id, platform, Link) VALUES(?,?,?);";
+          connection.query(query, [placeId, key, value], (err, result) => {
+            if (err) {
+              return reject(new Error(err.message));
+            }
+
+            resolve(result);
+          });
+
+          console.log(key, value);
+        }
+      });
+
+      console.log(addSocialsRequest);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   //  Update Row
   async updateNfc(id, reseller, phone, nfcId, placeId) {
     try {
@@ -129,6 +154,28 @@ class DbService {
 
       console.log(updateRequest);
       return { success: true, id, reseller, phone, nfcId, placeId };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Update Socials PlaceId
+  async updateSocialsPlaceId(oldPlaceId, newPlaceId) {
+    try {
+      const updateSocialsPlaceIDRequest = await new Promise(
+        (resolve, reject) => {
+          const query = "UPDATE socials SET place_id = ? WHERE place_id = ?";
+
+          connection.query(query, [newPlaceId, oldPlaceId], (err, result) => {
+            if (err) {
+              return reject(err.message);
+            }
+            resolve(result);
+          });
+        }
+      );
+
+      console.log('PlaceId updated:"', updateSocialsPlaceIDRequest);
     } catch (error) {
       console.log(error);
     }
