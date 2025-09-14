@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="../public/css/bootstrap.css" />
     <link rel="stylesheet" href="../public/css/login.css" />
   </head>
@@ -11,10 +16,19 @@
     <!-- Navbar -->
     <nav class="navbar bg-primary">
       <div class="container">
-        <!-- Website Title -->
-        <h1 class="website-title">Food Places | Login</h1>
+        <div id="logo-area">
+          <!-- Image/Logo-->
+          <img
+            id="logo"
+            src="/public/png/white/Foozu-logo-vector-2021-04.png"
+            alt=""
+          />
 
-        <!-- The Search Button in navbar -->
+          <!-- Website Title -->
+          <h1 class="website-title">Food Places</h1>
+        </div>
+
+        <!-- The Home Button in navbar -->
         <div id="home">
           <a href="../" id="admin-home-btn" class="btn btn-primary"
             ><i class="fa-solid fa-left-long"></i> Back</a
@@ -26,34 +40,48 @@
     <div class="container">
       <div id="form-center-div">
         <div class="card p-5 mt-5 darker-bg">
-          <div class="card-head text-center">
-            <h1>Login</h1>
+          <div class="card-head text-center text-primary-light title-font">
+            <h1 class="text-shadow">Login</h1>
           </div>
           <div class="card-body p-0">
             <form>
               <div>
-                <label for="username" class="form-label" autocomplete="username"
-                  >Username</label
-                >
-                <input
-                  id="username"
-                  type="text"
-                  class="form-control darker-border"
-                  autocomplete="username"
-                />
+                <div class="form-floating">
+                  <input
+                    id="username"
+                    type="text"
+                    class="form-control darker-border"
+                    autocomplete="username"
+                    placeholder=""
+                  />
+                  <label
+                    for="username"
+                    class="form-label"
+                    autocomplete="username"
+                    >Username</label
+                  >
+                </div>
               </div>
               <div>
-                <label for="password" class="form-label">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  class="form-control darker-border"
-                  autocomplete="current-password"
-                />
+                <div class="form-floating mt-2">
+                  <input
+                    id="password"
+                    type="password"
+                    class="form-control darker-border"
+                    autocomplete="current-password"
+                    placeholder=""
+                  />
+                  <label
+                    for="password"
+                    class="form-label"
+                    autocomplete="password"
+                    >Password</label
+                  >
+                </div>
               </div>
             </form>
             <div class="center-btn">
-              <button id="login" class="btn btn-primary mt-1">
+              <button id="login" class="btn btn-primary text-light mt-1 shadow">
                 <i class="fa-solid fa-user-tie"></i>&nbsp Login
               </button>
             </div>

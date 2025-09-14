@@ -17,6 +17,11 @@ const resellerPhone = document.getElementById("phone-number");
 const NFCTagId = document.getElementById("nfc-tag-id");
 const placeID = document.getElementById("placeID");
 
+const facebookInput = document.getElementById("facebook");
+const instagramInput = document.getElementById("instagram");
+const youtubeInput = document.getElementById("youtube");
+const tiktokInput = document.getElementById("tiktok");
+
 // Socials Elements
 const addSocialBtn = document.getElementById("add-social");
 const removeSocialBtn = document.getElementById("remove-social");
@@ -27,10 +32,22 @@ const editPanelBg = document.getElementById("edit-panel-background");
 const editPanel = document.getElementById("edit-panel");
 const editPanelCancelBtn = document.getElementById("edit-panel-cancel");
 const editPanelConfirmBtn = document.getElementById("edit-panel-confirm");
+const editPanelSocialsSection = document.getElementById(
+  "edit-panel-socials-section"
+);
+let editPanelSocialsToDelete = [];
+let editPanelSocialsOrignalInfo = [];
+let editPanelSocialsToEdit = [];
+let editPanelSocialsToAdd = 0;
 
 // Booleans
 let allowAdd = false;
 let deleteConfirmed = false;
+
+// Generic Functions
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
 // Make the form area show when the plus button is clicked
 addBtn.addEventListener("click", () => {
@@ -51,6 +68,12 @@ cancelBtn.addEventListener("click", () => {
   formCard.classList.remove("show");
   // Show the plus button
   addBtn.style.display = "block";
+
+  // Clear the inputs of the socials
+  facebookInput.value = "";
+  instagramInput.value = "";
+  youtubeInput.value = "";
+  tiktokInput.value = "";
 
   // Clear all the extra socials
   socialsDiv.innerHTML = "";
@@ -119,9 +142,9 @@ function cancelEdit(e) {
             <td class="p-2">Tag ID: ${orignalRowInfo.nfcTagId}</td>
             <td class="p-2"> ${orignalRowInfo.placeId}</td>
             <td>
-          <a info_id="${orignalRowInfo.id}" class="text-secondary pointer info-row p-0">
+          <a info_id="${orignalRowInfo.id}" class="text-primary pointer info-row p-0">
           <i class="fa-solid fa-circle-info"></i></a>
-              <a edit_id="${orignalRowInfo.id}" class="text-primary pointer edit-row hover p-0"
+              <a edit_id="${orignalRowInfo.id}" class="text-third pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
               ></a>
               <a delete_id="${orignalRowInfo.id}" class="text-danger pointer delete-row hover p-0"
@@ -144,7 +167,7 @@ addSocialBtn.addEventListener("click", () => {
   extraSocials += 1;
 
   const newSocialForm = document.createElement("div");
-  newSocialForm.classList.add("mt-3", "custom-social", "col-12", "col-md-3");
+  newSocialForm.classList.add("mt-3", "custom-social", "col-12", "col-lg-3");
   newSocialForm.innerHTML = `
                 <div class="form-floating">
                 <input
@@ -216,6 +239,9 @@ function showEditPanel(e) {
     editPanelOrignalInfo.placeId;
   document.getElementById("edit-panel-tagId").querySelector("input").value =
     editPanelOrignalInfo.nfcTagId;
+
+  // Get the socials links from the databse and display them
+  editPanelShowSocials(editPanelOrignalInfo.placeId);
 }
 
 // Event listener for the edit panel cancel button
@@ -233,6 +259,14 @@ editPanelCancelBtn.addEventListener("click", () => {
   // Hide the edit panel
   editPanelBg.style = "opacity:0; z-index: -10;";
   editPanel.classList.remove("show");
+
+  // Clear the socials section
+  editPanelSocialsSection.innerHTML = "";
+
+  // Reset the variables
+  editPanelSocialsToDelete = [];
+  editPanelSocialsToEdit = [];
+  editPanelSocialsToAdd = 0;
 });
 
 // Event listener for the edit panel confirm button
@@ -276,22 +310,21 @@ editPanelConfirmBtn.addEventListener("click", (e) => {
       })
       .then((data) => {
         if (data.success) {
-          console.log("Edit Success");
         }
       });
 
     // If placeId was changed then also update the placeId in the socials table
-    if (editedRowInfo.placeId !== editPanelOrignalInfo.placeId) {
-      placeIDs = {
-        oldPlaceId: editPanelOrignalInfo.placeId,
-        newPlaceId: editedRowInfo.placeId,
-      };
-      fetch("/update-socials-placeid", {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify(placeIDs),
-      });
-    }
+    // if (editedRowInfo.placeId !== editPanelOrignalInfo.placeId) {
+    //   placeIDs = {
+    //     oldPlaceId: editPanelOrignalInfo.placeId,
+    //     newPlaceId: editedRowInfo.placeId,
+    //   };
+    //   fetch("/update-socials-placeid", {
+    //     headers: { "Content-Type": "application/json" },
+    //     method: "POST",
+    //     body: JSON.stringify(placeIDs),
+    //   });
+    // }
   }
 
   // Update the row in the table with the new values
@@ -305,9 +338,9 @@ editPanelConfirmBtn.addEventListener("click", (e) => {
             <td class="p-2">Tag ID: ${editedRowInfo.nfcTagId}</td>
             <td class="p-2"> ${editedRowInfo.placeId}</td>
             <td>
-            <a info_id="${editedRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <a info_id="${editedRowInfo.id}" class="text-primary pointer info-row p-0">
             <i class="fa-solid fa-circle-info"></i></a>
-              <a edit_id="${editedRowInfo.id}" class="text-primary pointer edit-row hover p-0"
+              <a edit_id="${editedRowInfo.id}" class="text-third pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
               ></a>
               <a delete_id="${editedRowInfo.id}" class="text-danger pointer delete-row hover p-0"
@@ -315,6 +348,121 @@ editPanelConfirmBtn.addEventListener("click", (e) => {
               ></a>
             </td>
   `;
+
+  // Socials Updates
+  // Delete the socials from the database if there are any to delete
+  if (editPanelSocialsToDelete.length > 0) {
+    // Delete the socials from the database
+    fetch("/delete-socials", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        socials: editPanelSocialsToDelete,
+        placeId: editedRowInfo.placeId,
+      }),
+    });
+  }
+
+  // Edit the socials in the database if there are any to edit/update
+  let editPanelConfirmedSocialDivs = Array.from(
+    document.getElementById("edit-panel-socials-section").children
+  );
+  let editPanelConfirmedSocialValues = [];
+
+  editPanelConfirmedSocialDivs.forEach((social) => {
+    // Exclude newly added socials and the plus social button
+    if (!social.classList.contains("edit-panel-custom-social") && !social.id) {
+      link = social.querySelector(".form-control").value;
+      platform = social.querySelector(".form-label").innerText.trim();
+      editPanelConfirmedSocialValues.push({ [platform]: link });
+    }
+  });
+
+  const changes = editPanelConfirmedSocialValues.filter((newSocial) => {
+    // New Values
+    const [platform, link] = Object.entries(newSocial)[0];
+
+    // Check if they are duplicate, and only return if its not true
+    return !editPanelSocialsOrignalInfo.some((originalSocial) => {
+      // New Values
+      const [origPlatform, origLink] = Object.entries(originalSocial)[0];
+      return origPlatform === platform && origLink === link;
+    });
+  });
+
+  if (changes.length > 0) {
+    console.log("There are changes to be made");
+    fetch("/edit-socials", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        placeId: editedRowInfo.placeId,
+        changes: changes,
+      }),
+    });
+  }
+
+  // Check to see if any socials were added
+  if (editPanelSocialsToAdd > 0) {
+    let addedSocials = [];
+    let addedSocialsData = [];
+
+    // To check if a its a duplicate addition
+    let platforms = [];
+    let orignalPlatforms = [];
+
+    // Get the platform and links of all the new added socials
+    const editPanelAllSocials = Array.from(editPanelSocialsSection.children);
+    editPanelAllSocials.forEach((social) => {
+      if (social.classList.contains("edit-panel-custom-social")) {
+        addedSocials.push(social);
+      } else if (social.classList.contains("edit-panel-social")) {
+        const platform = social.querySelector("input").id;
+        orignalPlatforms.push(platform);
+      }
+    });
+    // Loop through the added socials and get its data
+    addedSocials.forEach((social, i) => {
+      let platform = social
+        .querySelector(`#extra-social-${i + 1}-name`)
+        .value.toLowerCase();
+      let link = social
+        .querySelector(`#extra-social-${i + 1}-link`)
+        .value.toLowerCase();
+
+      addedSocialsData.push({ platform: platform, link: link });
+      platforms.push(platform);
+    });
+
+    // Get rid of platfroms which are already there
+    platforms = platforms.filter((social) => {
+      return !orignalPlatforms.includes(social);
+    });
+
+    // Only keep the added socials which are in platform array
+    addedSocialsData = addedSocialsData.filter((social) => {
+      return platforms.includes(social.platform);
+    });
+
+    // Clear all empty socials
+    addedSocialsData = addedSocialsData.filter((social) => {
+      return social.platform && social.link;
+    });
+
+    socials = {};
+
+    addedSocialsData.forEach((social) => {
+      socials[social.platform] = social.link;
+    });
+
+    let socialsRequest = { placeId: editedRowInfo.placeId, socials: socials };
+
+    fetch("/insert-socials", {
+      headers: { "Content-type": "application/json" },
+      method: "POST",
+      body: JSON.stringify(socialsRequest),
+    });
+  }
 
   // Clear all the input's values in the edit panel
   const panelInputs = Array.from(
@@ -329,8 +477,40 @@ editPanelConfirmBtn.addEventListener("click", (e) => {
   // Hide the edit panel
   editPanelBg.style = "opacity:0; z-index: -10;";
   editPanel.classList.remove("show");
+
+  // Clear Socials
+  editPanelSocialsSection.innerHTML = "";
+
+  // Reset the variables
+  editPanelSocialsToDelete = [];
+  editPanelSocialsToEdit = [];
+  editPanelSocialsToAdd = 0;
 });
 
+// Event Listener for deleting social
+editPanelSocialsSection.addEventListener("click", (e) => {
+  let platformToDelete;
+  // If button (or icon inside the button) is pressed
+  if (
+    e.target.classList.contains("edit-panel-delete-social") ||
+    e.target.classList.contains("edit-panel-delete-social-button")
+  ) {
+    if (e.target.getAttribute("platform")) {
+      platformToDelete = e.target.getAttribute("platform");
+    } else {
+      platformToDelete = e.target.parentElement.getAttribute("platform");
+    }
+    editPanelSocialsToDelete.push(platformToDelete);
+
+    // Delete the social from the UI
+    e.target.closest(".edit-panel-social").remove();
+  } else if (
+    e.target.classList.contains("edit-panel-add-social") ||
+    e.target.classList.contains("edit-panel-add-social-button")
+  ) {
+    editPanelAddSocial();
+  }
+});
 // NON UI STUFF
 // !!!!!!!!!!!!!!!
 // !!!!!!!!!!!!!!
@@ -376,9 +556,9 @@ function loadRow(row) {
   <td class="p-2">Tag ID: ${row.NFC_tag_id}</td>
   <td class="p-2">${row.Place_ID}</td>
   <td>
-    <a info_id="${row.ID}" class="text-secondary pointer info-row p-0">
+    <a info_id="${row.ID}" class="text-primary pointer info-row p-0">
     <i class="fa-solid fa-circle-info"></i></a>
-    <a edit_id="${row.ID}" class="text-primary pointer edit-row p-0"><i class="hover fa-solid fa-pen-to-square"></i></a>
+    <a edit_id="${row.ID}" class="text-third pointer edit-row p-0"><i class="hover fa-solid fa-pen-to-square"></i></a>
     <a delete_id="${row.ID}" class="text-danger pointer delete-row p-0"><i class="hover fa-solid fa-circle-xmark"></i></a>
   </td>
   `;
@@ -406,12 +586,6 @@ submitBtn.addEventListener("click", () => {
       placeID: placeID.value,
     };
     addNewNFCTag(info);
-
-    // Add socials links to socials table in database
-    const facebookInput = document.getElementById("facebook");
-    const instagramInput = document.getElementById("instagram");
-    const youtubeInput = document.getElementById("youtube");
-    const tiktokInput = document.getElementById("tiktok");
 
     // Create a socials object to store all the socials
     let socialsRequest = {};
@@ -450,6 +624,28 @@ submitBtn.addEventListener("click", () => {
     socialsRequest.placeId = placeID.value;
     socialsRequest.socials = socials;
 
+    // Check To see if the the place id already has a social. To prevent duplicate platforms for each place id
+    fetch("/get-socials", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ placeId: socialsRequest.placeId }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.data.length > 0) {
+          // If socialsRequest socials platform and link is the same, then no need to add it again to the database, so delete it
+          data.data.forEach((item) => {
+            if (socialsRequest.socials[item.platform] === item.Link) {
+              delete socialsRequest.socials[item.platform];
+            }
+
+            // If the link of a platfrom already there is changed, then change the platforms link in the database aswell
+          });
+        }
+      });
+
     // If the length of the socials object is more than 1 then there are socials to add
     if (Object.keys(socials).length > 1) {
       fetch("/insert-socials", {
@@ -459,11 +655,18 @@ submitBtn.addEventListener("click", () => {
       });
     }
 
-    // Clear the values from the form area
+    // Clear the values from the form area    console.log("Clear Inputs");
     reseller.value = "";
     resellerPhone.value = "";
     NFCTagId.value = "";
     placeID.value = "";
+
+    // Clear the inputs of the socials
+    facebookInput.value = "";
+    instagramInput.value = "";
+    youtubeInput.value = "";
+    tiktokInput.value = "";
+
     // Hide the from area
     formCard.classList.remove("show");
     // Show the plus button
@@ -630,7 +833,7 @@ function editConfirmed(e) {
             <td class="p-2">Tag ID: ${editedRowInfo.nfcTagId}</td>
             <td class="p-2"> ${editedRowInfo.placeId}</td>
             <td>
-            <a info_id="${editedRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <a info_id="${editedRowInfo.id}" class="text-primary pointer info-row p-0">
             <i class="fa-solid fa-circle-info"></i></a>
               <a edit_id="${editedRowInfo.id}" class="text-primary pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
@@ -642,19 +845,6 @@ function editConfirmed(e) {
   `;
         }
       });
-
-    // If placeId was changed then also update the placeId in the socials table
-    if (editedRowInfo.placeId !== orignalRowInfo.placeId) {
-      placeIDs = {
-        oldPlaceId: orignalRowInfo.placeId,
-        newPlaceId: editedRowInfo.placeId,
-      };
-      fetch("/update-socials-placeid", {
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-        body: JSON.stringify(placeIDs),
-      });
-    }
   } else {
     // If no changes were made then revert the row back to normal
     rowToEdit.innerHTML = `
@@ -665,9 +855,9 @@ function editConfirmed(e) {
             <td class="p-2">Tag ID: ${orignalRowInfo.nfcTagId}</td>
             <td class="p-2"> ${orignalRowInfo.placeId}</td>
             <td>
-            <a info_id="${orignalRowInfo.id}" class="text-secondary pointer info-row p-0">
+            <a info_id="${orignalRowInfo.id}" class="text-primary pointer info-row p-0">
             <i class="fa-solid fa-circle-info"></i></a>
-              <a edit_id="${orignalRowInfo.id}" class="text-primary pointer edit-row hover p-0"
+              <a edit_id="${orignalRowInfo.id}" class="text-third pointer edit-row hover p-0"
                 ><i class="hover fa-solid fa-pen-to-square"></i
               ></a>
               <a delete_id="${orignalRowInfo.id}" class="text-danger pointer delete-row hover p-0"
@@ -676,6 +866,137 @@ function editConfirmed(e) {
             </td>
   `;
   }
+}
+
+// Show the socials in the edit panel
+function editPanelShowSocials(placeID) {
+  fetch("/get-socials", {
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    body: JSON.stringify({ placeId: placeID }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if (data.data.length > 0) {
+        data.data.forEach((social) => {
+          const socialDiv = document.createElement("div");
+          socialDiv.classList.add("mt-3", "edit-panel-social");
+          socialDiv.innerHTML = `
+          <div class="form-floating">
+                  <input
+                    id="${social.platform}"
+                    type="text"
+                    class="form-control"
+                    placeholder=" "
+                    value="${social.Link}"
+                  />
+                  <label for="${
+                    social.platform
+                  }" class="form-label social-label"
+                    ><i class="${iconSelector(social.platform)}"></i>
+                    ${capitalize(social.platform)}
+                  </label>
+                  <button platform="${
+                    social.platform
+                  }" class="btn btn-danger btn-xsm edit-panel-delete-social-button">
+                    <i class="fa-solid fa-minus edit-panel-delete-social"></i>
+                  </button>
+                </div>`;
+
+          editPanelSocialsSection.appendChild(socialDiv);
+        });
+
+        // Add the Plus social button in the end
+        const plusSocialButton = document.createElement("div");
+        plusSocialButton.classList.add("mt-3");
+        plusSocialButton.id = "edit-panel-button-container";
+
+        plusSocialButton.innerHTML = `<div id="edit-panel-add-button-container">
+                  <button platform="" class="btn btn-success btn-xsm edit-panel-add-social-button">
+                    <i class="fa-solid fa-plus edit-panel-add-social"></i>
+                  </button>
+                </div>`;
+        editPanelSocialsSection.appendChild(plusSocialButton);
+      } else {
+        editPanelSocialsSection.innerHTML = `
+              <div id="edit-panel-add-social-button-div" class="mt-3">
+                <div id="edit-panel-add-button-container">
+                  <button platform="" class="btn btn-success btn-xsm edit-panel-add-social-button">
+                    <i class="fa-solid fa-plus edit-panel-add-social"></i>
+                  </button>
+                </div>
+              </div>`;
+      }
+
+      // Get all the orignal info of the socials
+      socialsArr = Array.from(editPanelSocialsSection.children);
+
+      if (socialsArr.length > 1) {
+        socialsArr.forEach((social) => {
+          if (!social.id) {
+            link = social.querySelector(".form-control").value;
+            platform = social.querySelector(".form-label").innerText.trim();
+            editPanelSocialsOrignalInfo.push({ [platform]: link });
+          }
+        });
+      }
+    });
+}
+
+function iconSelector(platform) {
+  const icons = {
+    facebook: "fa-brands fa-square-facebook",
+    instagram: "fa-brands fa-square-instagram",
+    youtube: "fa-brands fa-youtube",
+    tiktok: "fa-brands fa-tiktok",
+    twitter: "fa-brands fa-square-x-twitter", // X (Twitter)
+    x: "fa-brands fa-square-x-twitter",
+    linkedin: "fa-brands fa-linkedin",
+    snapchat: "fa-brands fa-square-snapchat",
+    pinterest: "fa-brands fa-square-pinterest",
+    github: "fa-brands fa-square-github",
+    reddit: "fa-brands fa-reddit",
+    discord: "fa-brands fa-discord",
+    whatsapp: "fa-brands fa-square-whatsapp",
+    telegram: "fa-brands fa-telegram",
+    snap: "fa-brands fa-square-snapchat",
+  };
+
+  return icons[platform.toLowerCase()];
+}
+
+function editPanelAddSocial() {
+  editPanelSocialsToAdd += 1;
+
+  const newSocialForm = document.createElement("div");
+  newSocialForm.classList.add(
+    "mt-3",
+    "edit-panel-social",
+    "edit-panel-custom-social"
+  );
+  newSocialForm.innerHTML = `
+                <div class="form-floating">
+                <input
+                  id="extra-social-${editPanelSocialsToAdd}-name"
+                  type="text"
+                  class="form-control"
+                  id="platform"
+                  placeholder="Platform Name"
+                />
+                <label for="extra-social-${editPanelSocialsToAdd}-name">Platform Name</label>
+              </div>
+              <div class="form-floating">
+                <input id="extra-social-${editPanelSocialsToAdd}-link" type="text" class="form-control" placeholder=" " />
+                <label for="extra-social-${editPanelSocialsToAdd}-link" class="form-label social-label">Link</label>
+              </div>
+  `;
+
+  editPanelSocialsSection.insertBefore(
+    newSocialForm,
+    editPanelSocialsSection.lastElementChild
+  );
 }
 
 // // Logout Once DOM closes

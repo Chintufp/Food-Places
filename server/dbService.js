@@ -55,6 +55,26 @@ class DbService {
     }
   }
 
+  // Get Socials List by PlaceId
+  async getSocials(placeId) {
+    try {
+      const socialsList = await new Promise((resolve, reject) => {
+        const query = "SELECT * FROM socials WHERE place_id = ?";
+        connection.query(query, [placeId], (err, results) => {
+          if (err) {
+            return reject(new Error(err.message));
+          }
+
+          resolve(results);
+        });
+      });
+
+      return socialsList;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   //   Add new row
   async addNewNfc(reseller, phone, nfcId, placeId) {
     try {
@@ -79,7 +99,7 @@ class DbService {
       const linkId = addRequest.insertId;
 
       //   New Unique Link
-      const link = `${process.env.URL}/restaraunt/${linkId}`;
+      const link = `${process.env.URL}/restaurant/${linkId}`;
 
       await new Promise((resolve, reject) => {
         const updateAddRequestQuery =
@@ -116,13 +136,17 @@ class DbService {
         for (let [key, value] of Object.entries(socials)) {
           const query =
             "INSERT INTO socials (place_id, platform, Link) VALUES(?,?,?);";
-          connection.query(query, [placeId, key, value], (err, result) => {
-            if (err) {
-              return reject(new Error(err.message));
-            }
+          connection.query(
+            query,
+            [placeId, key.toLowerCase(), value],
+            (err, result) => {
+              if (err) {
+                return reject(new Error(err.message));
+              }
 
-            resolve(result);
-          });
+              resolve(result);
+            }
+          );
 
           console.log(key, value);
         }
@@ -159,27 +183,85 @@ class DbService {
     }
   }
 
-  // Update Socials PlaceId
-  async updateSocialsPlaceId(oldPlaceId, newPlaceId) {
+  // Edit Socials
+  async editSocials(body) {
     try {
-      const updateSocialsPlaceIDRequest = await new Promise(
-        (resolve, reject) => {
-          const query = "UPDATE socials SET place_id = ? WHERE place_id = ?";
+      const editRequest = await new Promise((resolve, reject) => {
+        const placeId = body.placeId;
+        const changes = body.changes;
 
-          connection.query(query, [newPlaceId, oldPlaceId], (err, result) => {
-            if (err) {
-              return reject(err.message);
-            }
-            resolve(result);
-          });
-        }
-      );
+        let caseStatements = [];
+        let platforms = [];
+        let caseValues = [];
+        let platformValues = [];
+        let values = [];
 
-      console.log('PlaceId updated:"', updateSocialsPlaceIDRequest);
+        changes.forEach((changeObj) => {
+          const platform = Object.keys(changeObj)[0];
+          const link = changeObj[platform];
+
+          // Use ? placeholder for each link
+          caseStatements.push(`WHEN ? THEN ?`);
+          // Push platform and link to fill in the ? slots
+          caseValues.push(platform, link);
+
+          platforms.push("?");
+
+          // Push platform again to fill in the ? for  WHERE platform IN
+          platformValues.push(platform);
+        });
+
+        // Add both value arrays into one array
+        values = values.concat(caseValues);
+        values = values.concat(platformValues);
+
+        values.push(placeId); // for WHERE place_id = ?
+
+        const query = `
+                    UPDATE socials
+                          SET Link = CASE platform 
+                          ${caseStatements.join("\n  ")} 
+                          END
+                          WHERE platform IN (${platforms.join(",")})
+                          AND place_id = ?;`;
+
+        console.log(query);
+        connection.query(query, values, (err, result) => {
+          if (err) {
+            return reject(err.message);
+          }
+
+          resolve(result);
+        });
+      });
+
+      return editRequest;
     } catch (error) {
-      console.log(error);
+      console.log("Edit Socials Error:", error);
     }
   }
+
+  // // Update Socials PlaceId
+  // async updateSocialsPlaceId(oldPlaceId, newPlaceId) {
+  //   try {
+  //     const updateSocialsPlaceIDRequest = await new Promise(
+  //       (resolve, reject) => {
+  //         const query = "UPDATE socials SET place_id = ? WHERE place_id = ?";
+
+  //         connection.query(query, [newPlaceId, oldPlaceId], (err, result) => {
+  //           if (err) {
+  //             return reject(err.message);
+  //           }
+  //           resolve(result);
+  //         });
+  //       }
+  //     );
+
+  //     console.log('PlaceId updated:"', updateSocialsPlaceIDRequest);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   //   Delete Row
   async deleteNfc(id) {
@@ -199,6 +281,29 @@ class DbService {
       return { success: true };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  // Delete Socials
+  async deleteSocials(socials, placeId) {
+    try {
+      await new Promise((resolve, reject) => {
+        let queryPlaceholders = new Array(socials.length).fill("?");
+        const query = `DELETE FROM socials WHERE platform IN (${queryPlaceholders}) AND place_id = ?`;
+        socials.push(placeId);
+
+        connection.query(query, socials, (err, result) => {
+          if (err) {
+            return reject(new Error(err.message));
+          }
+
+          resolve(result);
+        });
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.log("DELETE ERROR", error.message);
     }
   }
 

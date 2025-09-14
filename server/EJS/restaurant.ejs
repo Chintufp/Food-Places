@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leave A Review</title>
+    <link rel="stylesheet" href="../public/css/bootstrap.css" />
+    <link rel="stylesheet" href="../public/css/restaraunt.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div id="logo-area">
+          <!-- Image/Logo-->
+          <img
+            id="logo"
+            src="../../public/png/bordeaux/Foozu-logo-vector-2021-02.png"
+            alt=""
+          />
+
+          <!-- Website Title -->
+          <h1 class="website-title">Food Places</h1>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Body of the page -->
+    <div class="container">
+      <div class="card mt-5">
+        <div class="card-body">
+          <div class="center mt-3">
+            <div
+              class="d-flex flex-column gap-2 mt-2 justify-content-center align-items-center title-font"
+            >
+              <a
+                target="_blank"
+                class="btn btn-outline-primary p-3 button <% if(placeId == undefined) {%>return unavailable disabled <%} %>"
+                href="https://search.google.com/local/writereview?placeid=<%= placeId %> "
+                >Leave a review</a
+              >
+              <% socials.forEach(social => { %>
+
+              <a
+                href="<%= social.Link %>"
+                target="_blank"
+                class="btn btn-outline-primary button"
+                ><i class="<%= social.icon %>"></i>
+                <%= social.platform.charAt(0).toUpperCase() +
+                social.platform.slice(1) %>
+              </a>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/2c1c6fb3c6.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../public/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

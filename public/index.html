@@ -4,21 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Food Places</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar bg-primary">
+    <nav class="navbar">
       <div class="container">
-        <!-- Website Title -->
-        <h1 class="website-title">Food Places</h1>
+        <!-- Logo Area -->
+        <div id="logo-area">
+          <!-- Image/Logo-->
+          <img
+            id="logo"
+            src="./png/bordeaux/Foozu-logo-vector-2021-02.png"
+            alt=""
+          />
+
+          <!-- Website Title -->
+          <h1 class="website-title">Food Places</h1>
+        </div>
 
         <!-- The Search Button in navbar -->
         <div id="magnifying-glass-div">
           <button
             id="change-location-collapse-btn"
-            class="btn btn-primary"
+            class="btn btn-primary shadow"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSearch"
           >
@@ -30,7 +45,7 @@
     <!-- The dropdown under the navbar when the icon is clicked -->
     <div class="search bg-primary">
       <div id="navbarSearch" class="collapse">
-        <div class="input-group area-input mb-2 me-2">
+        <div class="input-group area-input mb-2 me-2 mt-3">
           <input
             placeholder="Enter different location"
             class="form-control"
@@ -50,7 +65,7 @@
         <div class="card-body rounded-4 text-center">
           <button
             id="get-nearby-restaraunts"
-            class="btn btn-primary text-light"
+            class="btn btn-primary text-light shadow"
           >
             Get Nearby Restaurants
           </button>

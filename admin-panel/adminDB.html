@@ -4,19 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Food Places Admin</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../public/css/bootstrap.css" />
     <link rel="stylesheet" href="../public/css/adminDB.css" />
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar bg-primary">
+    <nav class="navbar">
       <div class="container">
-        <!-- Website Title -->
-        <h1 class="website-title">Food Places | Admin Dashboard</h1>
+        <div id="logo-area">
+          <!-- Image/Logo-->
+          <img
+            id="logo"
+            src="./png/bordeaux/Foozu-logo-vector-2021-02.png"
+            alt=""
+          />
 
+          <!-- Website Title -->
+          <h1 class="website-title">Food Places</h1>
+        </div>
         <!-- Home Button in the navbar -->
         <div id="home">
-          <a href="../" id="admin-home-btn" class="btn btn-primary"
+          <a href="../" id="admin-home-btn" class="btn btn-primary shadow"
             ><i class="fa-solid fa-left-long"></i> Back</a
           >
         </div>
@@ -25,16 +37,20 @@
 
     <div class="container">
       <!-- Add NFC tag button -->
-      <button id="add-NFC" class="add-NFC btn btn-primary mt-2">
-        <i class="fa-solid fa-plus"></i>
+      <button id="add-NFC" class="btn btn-primary mt-2 shadow">
+        <i class="fa-solid fa-plus text-white"></i>
       </button>
       <!-- Form area for add NFC tag Reseller button -->
       <div id="add-NFC-div" class="card mt-1">
         <div class="card-body">
-          <button id="cancel-add" class="btn btn-danger mt-2">Cancel</button>
-          <button id="submit-add" class="btn btn-primary mt-2">Submit</button>
+          <button id="cancel-add" class="btn btn-danger bg-gradient mt-2">
+            Cancel
+          </button>
+          <button id="submit-add" class="btn btn-primary text-white mt-2">
+            Submit
+          </button>
 
-          <div class="add-NFC-form d-flex flex-column flex-md-row gap-md-3">
+          <div class="add-NFC-form d-flex flex-column flex-lg-row gap-lg-3">
             <div class="mt-3 flex-fill">
               <div class="form-floating">
                 <input
@@ -102,7 +118,7 @@
           <!-- Socials Input -->
           <div
             id="socials-section"
-            class="d-flex flex-column flex-md-row gap-md-3"
+            class="d-flex flex-column flex-lg-row gap-lg-3"
           >
             <div class="mt-3 flex-fill social">
               <div class="form-floating">
@@ -165,7 +181,7 @@
           </div>
           <div id="extra-socials" class="row">
             <!-- All the user added socials will be here -->
-            <!-- <div class="mt-3 custom-social col-12 col-md-3">
+            <!-- <div class="mt-3 custom-social col-12 col-lg-3">
               <div class="form-floating">
                 <input
                   id=""
@@ -181,12 +197,12 @@
                 <label for="" class="form-label social-label">Link</label>
               </div>
             </div> -->
+            <!-- Button to add more socials -->
           </div>
-          <!-- Button to add more socials -->
           <button id="remove-social" class="btn btn-danger">
             <i class="fa-solid fa-minus"></i>
           </button>
-          <button id="add-social" class="btn btn-primary">
+          <button id="add-social" class="btn btn-success">
             <i class="fa-solid fa-plus"></i>
           </button>
         </div>
@@ -195,13 +211,13 @@
       <!-- Table displaying the current nfc tags -->
       <table id="nfc-table" class="table table-hover mt-3">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Reseller</th>
-            <th>Reseller Phone</th>
-            <th>Link</th>
-            <th>NFC tag</th>
-            <th>Place ID</th>
+          <tr class="table-heading">
+            <th class="table-heading">ID</th>
+            <th class="table-heading">Reseller</th>
+            <th class="table-heading">Reseller Phone</th>
+            <th class="table-heading">Link</th>
+            <th class="table-heading">NFC tag</th>
+            <th class="table-heading">Place ID</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -213,7 +229,7 @@
             <td class="p-2">Tag ID: 1</td>
             <td class="p-2"></td>
             <td class="p-0">
-              <a info_id="" class="text-secondary pointer info-row"
+              <a info_id="" class="text-primary pointer info-row"
                 ><i class="fa-solid fa-circle-info"></i
               ></a>
               <a edit_id="" class="text-primary pointer edit-row"
@@ -250,18 +266,23 @@
       </div>
     </div>
 
-    <!-- Modal -->
     <div id="edit-panel-background">
+      <!-- Edit Panel -->
       <div id="edit-panel">
-        <div class="card">
-          <!-- Card Title -->
-          <div class="card-title d-flex p-3 pb-0 justify-content-between">
-            <h2>Edit</h2>
-            <div id="buttons">
-              <button id="edit-panel-cancel" class="btn btn-danger btn-sm">
+        <div class="card border-none rounded-5">
+          <!-- Edit Panel Title -->
+          <div
+            class="card-title d-flex p-3 pb-0 justify-content-between bg-third"
+          >
+            <h2 class="title-font">Edit</h2>
+            <div id="buttons" class="title-font">
+              <button id="edit-panel-cancel" class="btn btn-secondary">
                 Cancel
               </button>
-              <button id="edit-panel-confirm" class="btn btn-primary btn-sm">
+              <button
+                id="edit-panel-confirm"
+                class="btn btn-primary text-white"
+              >
                 Edit
               </button>
             </div>
@@ -273,7 +294,7 @@
             <div id="edit-panel-inputs" class="row p-0 m-0">
               <div
                 id="edit-panel-id"
-                class="form-floating col-2 col-md-1 text-center p-0 m-0"
+                class="form-floating col-2 col-lg-1 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -286,7 +307,7 @@
               </div>
               <div
                 id="edit-panel-name"
-                class="form-floating col-10 col-md-2 text-center p-0 m-0"
+                class="form-floating col-10 col-lg-2 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -298,7 +319,7 @@
               </div>
               <div
                 id="edit-panel-phone"
-                class="form-floating col-12 col-md-2 text-center p-0 m-0"
+                class="form-floating col-12 col-lg-2 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -310,7 +331,7 @@
               </div>
               <div
                 id="edit-panel-link"
-                class="form-floating col-12 col-md-4 text-center p-0 m-0"
+                class="form-floating col-12 col-lg-4 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -323,7 +344,7 @@
               </div>
               <div
                 id="edit-panel-tagId"
-                class="form-floating col-12 col-md-1 text-center p-0 m-0"
+                class="form-floating col-12 col-lg-1 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -336,7 +357,7 @@
 
               <div
                 id="edit-panel-placeId"
-                class="form-floating col-12 col-md-2 text-center p-0 m-0"
+                class="form-floating col-12 col-lg-2 text-center p-0 m-0"
               >
                 <input
                   type="text"
@@ -347,12 +368,10 @@
                 <label for="" class="label-center">Place ID</label>
               </div>
             </div>
-            <!-- Socials Section -->
-            <div
-              id="socials-section"
-              class="d-flex flex-column flex-md-row gap-md-3"
-            >
-              <div class="mt-3 edit-panel-social">
+            <!-- Edit Panel Socials Section -->
+            <div id="edit-panel-socials-section">
+              <!--  -->
+              <!-- <div class="mt-3 edit-panel-social">
                 <div class="form-floating">
                   <input
                     id="facebook"
@@ -360,15 +379,25 @@
                     class="form-control"
                     placeholder=" "
                   />
-                  <label for="facebook" class="form-label social-label"
+                  <label
+                    for="facebook"
+                    class="form-label social-label "
                     ><i class="fa-brands fa-square-facebook"></i>
                     Facebook
                   </label>
-                  <button class="btn btn-danger btn-xsm">
-                    <i class="fa-solid fa-minus"></i>
+                  <button platform="" class="btn btn-danger btn-xsm edit-panel-delete-social-button">
+                    <i class="fa-solid fa-minus edit-panel-delete-social"></i>
                   </button>
                 </div>
               </div>
+              <div id="edit-panel-add-social-button-div" class="mt-3">
+                <div id="edit-panel-add-button-container">
+                  <button platform="" class="btn btn-success btn-xsm edit-panel-delete-social-button">
+                    <i class="fa-solid fa-plus edit-panel-add-social edit-panel-delete-social"></i>
+                  </button>
+                </div>
+              </div> -->
+              <!--  -->
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
-@import "../scss/bootstrap.scss";
+@use "../scss/bootstrap.scss" as var;
+
 
 // Stylesheet for admin dashboard page
 .navbar {
@@ -6,10 +7,39 @@
     z-index: 2;
 }
 
+// Logo area
+#logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo {
+    display: block;
+    width: 100px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+}
+
+.title-font {
+    font-family: 'Fredoka One', sans-serif;
+}
+
+
 // For the wesbsite title
 .website-title {
-    color: #fff;
-    font-size: 2rem;
+    font-family: 'Fredoka One', sans-serif;
+
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 1.5rem;
+    // margin-bottom: 5px;
+    transform: translateY(-10px);
 }
 
 // To make the icons white
@@ -40,13 +70,35 @@
 
 // Make the border darker
 .darker-border {
-    border-color: $secondary;
+    border-color: var.$secondary;
+}
+
+.text-primary-dark {
+    color: var.$primary-darker;
+    ;
+}
+
+.text-primary-light {
+    color: var.$primary-light;
+    ;
 }
 
 // Center the login button
 .center-btn {
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
+}
+
+.shadow {
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 4px 3px 1px var.$secondary !important;
+    border-radius: 6px !important;
+}
+
+.text-shadow {
+    text-shadow: 2px 2px var.$secondary
 }
 
 // Hide the incorrect password prompt
@@ -61,4 +113,9 @@
 
 #invalid-password-toast.show {
     opacity: 1;
+}
+
+// Remove border from inputs
+input {
+    border: 1px solid #dddddd !important;
 }

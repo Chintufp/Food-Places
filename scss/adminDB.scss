@@ -1,13 +1,62 @@
+@use "../scss/bootstrap.scss" as var;
+
+.text-third {
+    color: #009261 !important;
+}
+
+.bg-third {
+    background-color: #45ac89;
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+.border-none {
+    border: none;
+}
+
 // Stylesheet for admin dashboard page
 .navbar {
     border: none;
     z-index: 2;
 }
 
+// Logo area
+#logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo {
+    display: block;
+    width: 200px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.title-font {
+    font-family: 'Fredoka One', sans-serif;
+}
+
 // For the wesbsite title
 .website-title {
-    color: #fff;
-    font-size: 2rem;
+    font-family: 'Fredoka One', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #db1ea6;
+    font-size: 1.5rem;
+    // margin-bottom: 5px;
+    transform: translateY(-10px);
+}
+
+.shadow {
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 4px 3px 1px var.$secondary !important;
+    border-radius: 6px !important;
 }
 
 // To make the icons white
@@ -18,7 +67,11 @@
 // Styles for the home 
 #admin-home-btn {
     color: #fff;
+
+
 }
+
+
 
 // Styles for the add nfc tag div area 
 
@@ -42,6 +95,7 @@
 
 #add-nfc {
     transition: all;
+    color: white !important;
 }
 
 .asterisk {
@@ -50,6 +104,43 @@
 
 .pointer {
     cursor: pointer;
+}
+
+#submit-add {
+    box-shadow: 2px 2px 1px var.$secondary;
+}
+
+
+// Table 
+.table-head {
+    background-color: var.$primary;
+}
+
+thead {
+
+    background-color: #FB488C !important;
+    /* your pink */
+    color: white;
+
+    background-color: #FFD6E6;
+    /* soft tint */
+    color: #2A2A2A;
+
+    th:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 5px;
+    }
+
+    th:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 5px;
+    }
+}
+
+.table-heading {
+    background-color: #FB488C !important;
+    /* your pink */
+    color: white !important;
 }
 
 // Socials Section
@@ -158,6 +249,23 @@
     transform: translateY(0)
 }
 
+#edit-panel-socials-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    grid-auto-rows: auto;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
 .normal-disabled {
     background-color: white !important;
 }
@@ -168,5 +276,20 @@
     text-align: center;
     font-size: 12px;
     padding: 0;
-    align-self: flex-end;
+
+}
+
+#edit-panel-add-social-button-div {
+    display: block;
+    height: 50px;
+}
+
+#edit-panel-add-button-container {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+
 }

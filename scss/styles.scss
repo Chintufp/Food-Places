@@ -1,5 +1,14 @@
 // Variables
-$lgreen: #4d9e4d;
+$lgreen: white;
+// Custom Variables
+$primary: #fb488c;
+$primary-darker: #ad1f55;
+$secondary: #6633fe;
+
+// Body 
+body {
+    font-family: Viga, sans-serif;
+}
 
 // For bg
 .bg-lgreen {
@@ -19,12 +28,36 @@ $lgreen: #4d9e4d;
 // For navbar
 .navbar {
     border: none;
+    color: black;
 }
+
+// Logo area
+#logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo {
+    display: block;
+    width: 200px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
 
 // For the wesbsite title
 .website-title {
-    color: #fff;
-    font-size: 2rem;
+    font-family: 'Fredoka One', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: $primary;
+    font-size: 1.5rem;
+    // margin-bottom: 5px;
+    transform: translateY(-10px);
 }
 
 // To make the icons white
@@ -34,9 +67,18 @@ $lgreen: #4d9e4d;
 
 // To Align the navbar icon to the right
 #magnifying-glass-div {
+    :hover {
+        background-color: $primary-darker;
+    }
+
     display: flex;
     align-items: end;
     justify-content: end;
+    border: none !important;
+}
+
+#change-location-collapse-btn :hover {
+    background-color: transparent;
 }
 
 // To align the search to the right
@@ -46,6 +88,13 @@ $lgreen: #4d9e4d;
     justify-content: end;
     align-items: end;
     // min-height: 7px;
+}
+
+.shadow {
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 4px 3px 1px $secondary !important;
+    border-radius: 6px !important;
 }
 
 // To shorten the search inputs width
@@ -68,7 +117,7 @@ $lgreen: #4d9e4d;
 // Restaurant Card
 
 .restaurant-card {
-    background-color: $lgreen;
+    background-color: $primary;
     border: none;
     color: #1a1a1a;
 }
@@ -105,6 +154,12 @@ h2 {
 
 
 // Opening Hours
+#opening-hours-btn {
+    color: white;
+
+}
+
 .opening-hours {
     text-align: left;
+    color: white;
 }

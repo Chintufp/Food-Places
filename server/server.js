@@ -135,6 +135,17 @@ app.get("/get", (request, response) => {
   // });
 });
 
+// Get Socials
+app.post("/get-socials", (req, res) => {
+  const placeId = req.body.placeId;
+
+  const db = dbService.getDbServiceInstance();
+  const socialsList = db.getSocials(placeId);
+  socialsList.then((data) => {
+    res.json({ data: data });
+  });
+});
+
 // Update
 app.post("/update", (request, response) => {
   const db = dbService.getDbServiceInstance();
@@ -155,12 +166,12 @@ app.post("/update", (request, response) => {
 });
 
 // Update socials placeid
-app.post("/update-socials-placeid", (req, res) => {
+app.post("/edit-socials", (req, res) => {
   const db = dbService.getDbServiceInstance();
 
-  const newPlaceId = req.body.newPlaceId;
-  const oldPlaceId = req.body.oldPlaceId;
-  db.updateSocialsPlaceId(oldPlaceId, newPlaceId);
+  db.editSocials(req.body).then((data) => {
+    console.log(data);
+  });
 });
 
 // Delete
@@ -171,6 +182,18 @@ app.post("/delete", (request, response) => {
     if (confirmed.success) {
       response.json({ successfully_deleted: true });
     }
+  });
+});
+
+// Delete Socials
+app.post("/delete-socials", (request, response) => {
+  const db = dbService.getDbServiceInstance();
+
+  const socialsToDelete = request.body.socials;
+  const placeId = request.body.placeId;
+
+  db.deleteSocials(socialsToDelete, placeId).then((data) => {
+    return data;
   });
 });
 
@@ -239,8 +262,8 @@ app.get("/admin", (req, res, next) => {
     // console.log("redirect to admin");
   } else {
     // Temporarily allow access to admin page without login
-    res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
-    // next();
+    // res.sendFile(path.join(__dirname, "../admin-panel/adminDB.html"));
+    next();
   }
 });
 
@@ -262,13 +285,40 @@ app.get("/restaurant/:id/", (req, res, next) => {
   db = dbService.getDbServiceInstance();
 
   // Get place id by link id
-  placeId = db.getPlaceIdByLinkId(req.params.id);
+  const getPlaceId = db.getPlaceIdByLinkId(req.params.id);
 
-  // Render the EJS page with the placeId
-  placeId.then((response) => {
-    console.log(response);
+  function iconSelector(platform) {
+    const icons = {
+      facebook: "fa-brands fa-square-facebook",
+      instagram: "fa-brands fa-square-instagram",
+      youtube: "fa-brands fa-youtube",
+      tiktok: "fa-brands fa-tiktok",
+      twitter: "fa-brands fa-square-x-twitter", // X (Twitter)
+      x: "fa-brands fa-square-x-twitter",
+      linkedin: "fa-brands fa-linkedin",
+      snapchat: "fa-brands fa-square-snapchat",
+      pinterest: "fa-brands fa-square-pinterest",
+      github: "fa-brands fa-square-github",
+      reddit: "fa-brands fa-reddit",
+      discord: "fa-brands fa-discord",
+      whatsapp: "fa-brands fa-square-whatsapp",
+      telegram: "fa-brands fa-telegram",
+      snap: "fa-brands fa-square-snapchat",
+    };
+
+    return icons[platform.toLowerCase()];
+  }
+
+  // Render the EJS page with the placeId and socials
+  getPlaceId.then((response) => {
     if (response !== null) {
-      res.render("restaurant", { placeId: response });
+      let placeId = response;
+      socials = db.getSocials(placeId).then((response) => {
+        response.forEach((item) => {
+          item.icon = iconSelector(item.platform);
+        });
+        res.render("restaurant", { placeId: placeId, socials: response });
+      });
     } else next();
   });
 });
